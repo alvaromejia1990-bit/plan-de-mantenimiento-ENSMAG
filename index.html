@@ -56,10 +56,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 nav.menu { position: sticky; top: 16px; background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 10px; display: grid; gap: 2px; }
 nav.menu .grp { font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); padding: 10px 10px 4px; }
 nav.menu a { display: flex; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 8px; text-decoration: none; color: var(--tinta); font-weight: 500; }
-nav.menu a .n { font-family: var(--display); font-weight: 700; color: var(--magenta); width: 22px; }
+nav.menu a .ic { flex: none; color: var(--magenta); }
 nav.menu a:hover { background: var(--azul-claro); }
 nav.menu a[aria-current="page"] { background: var(--azul); color: #fff; }
-nav.menu a[aria-current="page"] .n { color: #fff; }
+nav.menu a[aria-current="page"] .ic { color: #fff; }
 
 main { min-width: 0; }
 .banner { border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 14px; border: 1px solid var(--borde); background: var(--panel); }
@@ -240,19 +240,19 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
 <div class="wrap">
   <nav class="menu" aria-label="Formatos del plan">
-    <a href="#inicio" data-v="inicio"><span class="n">·</span>Inicio</a>
+    <a href="#inicio" data-v="inicio"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Inicio</a>
     <div class="grp">Formatos en línea</div>
-    <a href="#solicitud" data-v="solicitud"><span class="n">1</span>Solicitud de mantenimiento</a>
-    <a href="#inspeccion" data-v="inspeccion"><span class="n">2</span>Ficha de inspección</a>
-    <a href="#hoja-vida" data-v="hoja-vida"><span class="n">3</span>Hoja de vida de equipo</a>
-    <a href="#orden-trabajo" data-v="orden-trabajo"><span class="n">4</span>Orden de trabajo y recibo</a>
-    <a href="#baja" data-v="baja"><span class="n">5</span>Acta de baja de bienes</a>
-    <a href="#optimizacion" data-v="optimizacion"><span class="n">6</span>Solicitud de optimización</a>
+    <a href="#solicitud" data-v="solicitud"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.5 2.5l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.3-.5-.5-2.3z"/></svg>Solicitud de mantenimiento</a>
+    <a href="#inspeccion" data-v="inspeccion"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m9 13 2 2 4-4"/></svg>Ficha de inspección</a>
+    <a href="#hoja-vida" data-v="hoja-vida"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>Hoja de vida de equipo</a>
+    <a href="#orden-trabajo" data-v="orden-trabajo"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2"/><path d="M9 12h6M9 16h4"/></svg>Orden de trabajo y recibo</a>
+    <a href="#baja" data-v="baja"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Acta de baja de bienes</a>
+    <a href="#optimizacion" data-v="optimizacion"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Solicitud de optimización</a>
     <div class="grp" data-grp="seg">Seguimiento</div>
-    <a href="#registro" data-v="registro"><span class="n">7</span>Registro consolidado</a>
-    <a href="#informes" data-v="informes"><span class="n">8</span>Informes de mantenimiento</a>
+    <a href="#registro" data-v="registro"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>Registro consolidado</a>
+    <a href="#informes" data-v="informes"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Informes de mantenimiento</a>
     <div class="grp" data-grp="adm" hidden>Administración</div>
-    <a href="#usuarios" data-v="usuarios" hidden><span class="n">·</span>Usuarios y roles</a>
+    <a href="#usuarios" data-v="usuarios" hidden><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>Usuarios y roles</a>
   </nav>
 
   <main>
@@ -286,23 +286,24 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
       <div class="card" style="margin-top:16px">
         <h3>Formatos en línea</h3>
         <div class="formatos">
-          <a class="fmt" href="#solicitud"><b>1. Solicitud de mantenimiento</b><span>Reporte un daño en un espacio o equipo.</span></a>
-          <a class="fmt" href="#inspeccion"><b>2. Ficha de inspección</b><span>Física (por espacio) y tecnológica (por equipo).</span></a>
-          <a class="fmt" href="#hoja-vida"><b>3. Hoja de vida de equipo</b><span>Inventario y datos técnicos de cada equipo.</span></a>
-          <a class="fmt" href="#orden-trabajo"><b>4. Orden de trabajo y recibo</b><span>Trabajo realizado, costo, fotos y recibo.</span></a>
-          <a class="fmt" href="#baja"><b>5. Acta de baja de bienes</b><span>Propuesta de baja con concepto técnico.</span></a>
-          <a class="fmt" href="#optimizacion"><b>6. Solicitud de optimización</b><span>Mejoras propuestas por las áreas y el PFC.</span></a>
-          <a class="fmt" href="#informes"><b>8. Informes</b><span>Informe PDF por solicitud para el directivo.</span></a>
+          <a class="fmt" href="#solicitud"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.5 2.5l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.3-.5-.5-2.3z"/></svg>Solicitud de mantenimiento</b><span>Reporte un daño en un espacio o equipo.</span></a>
+          <a class="fmt" href="#inspeccion"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m9 13 2 2 4-4"/></svg>Ficha de inspección</b><span>Física (por espacio) y tecnológica (por equipo).</span></a>
+          <a class="fmt" href="#hoja-vida"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>Hoja de vida de equipo</b><span>Inventario y datos técnicos de cada equipo.</span></a>
+          <a class="fmt" href="#orden-trabajo"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2"/><path d="M9 12h6M9 16h4"/></svg>Orden de trabajo y recibo</b><span>Trabajo realizado, costo, fotos y recibo.</span></a>
+          <a class="fmt" href="#baja"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Acta de baja de bienes</b><span>Propuesta de baja con concepto técnico.</span></a>
+          <a class="fmt" href="#optimizacion"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>Solicitud de optimización</b><span>Mejoras propuestas por las áreas y el PFC.</span></a>
+          <a class="fmt" href="#informes"><b><svg class="ic" style="vertical-align:-4px;margin-right:6px" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Informes</b><span>Informe PDF por solicitud para el directivo.</span></a>
         </div>
       </div>
     </section>
 
     <!-- 1 SOLICITUD -->
     <section class="view" id="v-solicitud">
-      <div class="head"><div><div class="code">Formato 1 · Mantenimiento correctivo</div><h2>Solicitud de mantenimiento</h2>
+      <div class="head"><div><div class="code">Mantenimiento correctivo</div><h2>Solicitud de mantenimiento</h2>
         <p class="lead">Reporte el daño con el lugar exacto y, si puede, una foto. Si hay riesgo para las personas, aísle el lugar y avise de inmediato a coordinación o rectoría.</p></div></div>
       <form class="card" id="f-solicitud" novalidate>
         <div class="grid">
+          <label><span class="req">Fecha del reporte</span><span class="hint">Puede registrar daños detectados en fechas anteriores.</span><input type="date" id="s-fecha" required></label>
           <label><span class="req">Nombre de quien reporta</span><input type="text" id="s-nombre" name="nombre" required></label>
           <label><span class="req">Rol</span><select id="s-rol" name="rol" required><option value="">Seleccione…</option><option>Docente</option><option>Directivo docente</option><option>Estudiante</option><option>Administrativo</option><option>Servicios generales</option><option>Padre o acudiente</option></select></label>
           <label><span class="req">Sede</span><input type="text" id="s-sede" name="sede" required placeholder="Ej.: Sede principal"></label>
@@ -316,7 +317,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
             <label><input type="radio" name="riesgo" value="Sí" id="s-r-si" required> Sí</label>
             <label><input type="radio" name="riesgo" value="No" id="s-r-no"> No</label></div></fieldset>
           <label class="full"><span class="req">Descripción del daño</span><span class="hint">Qué pasa, desde cuándo y a quién afecta.</span><textarea id="s-desc" name="descripcion" required></textarea></label>
-          <label class="full"><span>Foto (opcional)</span><span class="hint">Se reduce automáticamente antes de guardarla.</span><input type="file" id="s-foto" accept="image/*"></label>
+          <label class="full"><span class="req">Fotografía del daño</span><span class="hint">Obligatoria. Se reduce automáticamente antes de guardarla.</span><input type="file" id="s-foto" accept="image/*" required></label>
           <div class="full preview" id="s-prev"></div>
         </div>
         <div class="actions"><button class="btn" type="submit" data-save>Enviar solicitud</button><button class="btn sec" type="reset">Limpiar</button><span class="msg" role="status"></span></div>
@@ -325,7 +326,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 2 INSPECCION -->
     <section class="view" id="v-inspeccion">
-      <div class="head"><div><div class="code">Formato 2 · Etapa 1: autoevaluación</div><h2>Ficha de inspección</h2>
+      <div class="head"><div><div class="code">Etapa 1: autoevaluación</div><h2>Ficha de inspección</h2>
         <p class="lead">Elija el tipo de inspección. Los componentes calificados como Malo o Crítico generan una solicitud de mantenimiento automáticamente.</p></div></div>
       <div class="tabs" role="tablist" aria-label="Tipo de inspección">
         <button type="button" role="tab" id="tab-fis" aria-selected="true" aria-controls="f-inspeccion">Inspección física</button>
@@ -415,7 +416,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 3 HOJA DE VIDA -->
     <section class="view" id="v-hoja-vida">
-      <div class="head"><div><div class="code">Formato 3 · Infraestructura tecnológica</div><h2>Hoja de vida de equipo tecnológico</h2>
+      <div class="head"><div><div class="code">Infraestructura tecnológica</div><h2>Hoja de vida de equipo tecnológico</h2>
         <p class="lead">Una ficha por equipo, identificada por su código de inventario. Si el código ya existe, la ficha se actualiza.</p></div></div>
       <form class="card" id="f-equipo" novalidate>
         <div class="grid">
@@ -443,7 +444,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 4 ORDEN DE TRABAJO -->
     <section class="view" id="v-orden-trabajo">
-      <div class="head"><div><div class="code">Formato 4 · Ejecución y recibo</div><h2>Orden de trabajo y acta de recibo a satisfacción</h2>
+      <div class="head"><div><div class="code">Ejecución y recibo</div><h2>Orden de trabajo y acta de recibo a satisfacción</h2>
         <p class="lead">Registra el trabajo realizado. Si la orden responde a una solicitud y se recibe a satisfacción, la solicitud queda cerrada en el registro.</p></div></div>
       <form class="card" id="f-orden" novalidate>
         <div class="grid">
@@ -475,7 +476,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 5 BAJA -->
     <section class="view" id="v-baja">
-      <div class="head"><div><div class="code">Formato 5 · Bajas</div><h2>Acta de baja de bienes</h2>
+      <div class="head"><div><div class="code">Bajas</div><h2>Acta de baja de bienes</h2>
         <p class="lead">Propuesta de baja con concepto técnico. El acta se aprueba con firma de rectoría y se tramita ante la Secretaría de Educación; los equipos van a un gestor de residuos electrónicos (RAEE) tras el borrado seguro de datos.</p></div></div>
       <form class="card" id="f-baja" novalidate>
         <div class="grid">
@@ -500,7 +501,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 6 OPTIMIZACION -->
     <section class="view" id="v-optimizacion">
-      <div class="head"><div><div class="code">Formato 6 · Plan de optimización</div><h2>Solicitud de optimización</h2>
+      <div class="head"><div><div class="code">Plan de optimización</div><h2>Solicitud de optimización</h2>
         <p class="lead">Para proponer una mejora, modernización o actualización de un espacio o equipo que funciona pero ya no responde a las necesidades pedagógicas. Indique quién la solicita, la necesidad y cómo se articula con los procesos de enseñanza y de formación de maestros.</p></div></div>
       <form class="card" id="f-optim" novalidate>
         <div class="grid">
@@ -511,6 +512,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label id="op-area-w"><span class="req">Área académica</span><select id="op-area"><option value="">Seleccione…</option></select></label>
           <label id="op-inst-w" hidden><span class="req">Instancia del PFC</span><select id="op-inst"><option value="">Seleccione…</option></select></label>
           <fieldset class="full" id="op-sem-w" hidden><legend>Semestres del PFC beneficiados</legend><div class="radios" id="op-sem"></div></fieldset>
+          <label><span class="req">Fecha de la solicitud</span><span class="hint">Puede registrar solicitudes de fechas anteriores.</span><input type="date" id="op-fecha" required></label>
           <label><span class="req">Nombre de quien solicita</span><input type="text" id="op-nombre" required></label>
           <label><span class="req">Cargo</span><select id="op-cargo" required><option value="">Seleccione…</option><option>Jefe(a) de área</option><option>Docente</option><option>Coordinador(a) del PFC</option><option>Coordinador(a) de práctica pedagógica</option><option>Docente del PFC</option><option>Directivo docente</option><option>Docente líder TIC</option></select></label>
 
@@ -548,7 +550,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
 
     <!-- 6 REGISTRO -->
     <section class="view" id="v-registro">
-      <div class="head"><div><div class="code">Formato 7 · Etapa 3: seguimiento</div><h2>Registro consolidado de solicitudes</h2>
+      <div class="head"><div><div class="code">Etapa 3: seguimiento</div><h2>Registro consolidado de solicitudes</h2>
         <p class="lead">El comité asigna la prioridad y actualiza el estado. Los plazos siguen la matriz del plan: prioridad 1, 5 días hábiles; prioridad 2, 15 días hábiles.</p></div></div>
       <div class="tiles" id="tilesReg"></div>
       <div class="card">
@@ -758,6 +760,8 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     if (eq) { if (eq.tipo) $("#it-tipo").value = eq.tipo; if (eq.ubicacion && !$("#it-ubic").value) $("#it-ubic").value = eq.ubicacion; if (eq.estado) $("#it-estado").value = eq.estado; }
   });
   $("#i-fecha").value = hoy();
+  ["#s-fecha", "#op-fecha", "#i-fecha", "#it-fecha", "#b-fecha"].forEach((x) => { const el = $(x); if (el) { el.max = hoy(); if (!el.value) el.value = hoy(); } });
+  $("#f-solicitud").addEventListener("reset", () => setTimeout(() => { $("#s-fecha").value = hoy(); }, 0));
   $("#b-fecha").value = hoy();
   $("#o-ini").value = hoy(); $("#o-fin").value = hoy();
   $("#fl-estado").innerHTML += ESTADOS.map((e) => `<option>${e}</option>`).join("");
@@ -811,11 +815,14 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
   $("#f-solicitud").addEventListener("submit", async (ev) => {
     ev.preventDefault(); const f = ev.target; const falta = validar(f);
     if (falta) { aviso(f, "Falta: " + etiqueta(falta).replace(" *", ""), false); falta.focus(); return; }
+    const fS = $("#s-fecha").value;
+    if (fS > hoy()) { aviso(f, "La fecha del reporte no puede ser posterior a hoy.", false); $("#s-fecha").focus(); return; }
+    if (!fotoData) { aviso(f, "Falta: fotografía del daño (obligatoria).", false); $("#s-foto").focus(); return; }
     if (!db) return;
     const d = datos(f); const id = nuevoId("SOL");
-    Object.assign(d, { numero: id, fecha: hoy(), estado: "Recibida", prioridad: d.riesgo === "Sí" ? 1 : 0, foto: fotoData || "" });
+    Object.assign(d, { numero: id, fecha: fS, estado: "Recibida", prioridad: d.riesgo === "Sí" ? 1 : 0, foto: fotoData || "" });
     const btn = $("[data-save]", f); btn.disabled = true;
-    try { await guardar("solicitudes", id, d); f.reset(); fotoData = ""; $("#s-prev").innerHTML = ""; llenarComp(); aviso(f, `Solicitud ${id} enviada. El comité la verificará en máximo 2 días hábiles.`, true); }
+    try { await guardar("solicitudes", id, d); f.reset(); fotoData = ""; $("#s-prev").innerHTML = ""; llenarComp(); $("#s-fecha").value = hoy(); aviso(f, `Solicitud ${id} enviada. El comité la verificará en máximo 2 días hábiles.`, true); }
     catch (e) { manejarError(f, e); } finally { btn.disabled = !db; }
   });
   // ---------- solicitud de optimización ----------
@@ -840,17 +847,18 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     try { opFoto = await reducir(f, 640, 0.5); $("#op-prev").innerHTML = `<figure><img src="${opFoto}" alt="Foto del espacio o equipo"><figcaption>Foto adjunta</figcaption></figure>`; }
     catch (_) { $("#op-prev").innerHTML = '<p class="msg err">No se pudo leer la imagen.</p>'; }
   });
-  $("#f-optim").addEventListener("reset", () => setTimeout(() => { opFoto = ""; $("#op-prev").innerHTML = ""; origenOpt(); }, 0));
+  $("#f-optim").addEventListener("reset", () => setTimeout(() => { opFoto = ""; $("#op-prev").innerHTML = ""; origenOpt(); $("#op-fecha").value = hoy(); }, 0));
   $("#f-optim").addEventListener("submit", async (ev) => {
     ev.preventDefault(); const f = ev.target; const falta = validar(f);
     if (falta && !falta.closest("[hidden]")) { aviso(f, "Falta: " + etiqueta(falta).replace(" *", ""), false); falta.focus(); return; }
     const refs = REFS.filter((a, i) => $("#op-r" + i).checked), pob = POBL.filter((a, i) => $("#op-p" + i).checked);
     if (!refs.length) { aviso(f, "Falta: marque al menos un referente pedagógico con el que se articula la solicitud.", false); return; }
     if (!pob.length) { aviso(f, "Falta: marque la población beneficiada.", false); return; }
+    if ($("#op-fecha").value > hoy()) { aviso(f, "La fecha de la solicitud no puede ser posterior a hoy.", false); $("#op-fecha").focus(); return; }
     if (!db) return;
     const pfc = $("input[name=origen]:checked", f).value.includes("PFC");
     const id = nuevoId("OPT");
-    const d = { numero: id, fecha: hoy(), origen: pfc ? "PFC" : "Área académica", esPFC: pfc, area: pfc ? "" : $("#op-area").value, instanciaPFC: pfc ? $("#op-inst").value : "", semestresPFC: pfc ? $$(".op-semc").filter((c) => c.checked).map((c) => c.value) : [],
+    const d = { numero: id, fecha: $("#op-fecha").value, origen: pfc ? "PFC" : "Área académica", esPFC: pfc, area: pfc ? "" : $("#op-area").value, instanciaPFC: pfc ? $("#op-inst").value : "", semestresPFC: pfc ? $$(".op-semc").filter((c) => c.checked).map((c) => c.value) : [],
       nombre: $("#op-nombre").value.trim(), cargo: $("#op-cargo").value, sede: $("#op-sede").value.trim(), espacio: $("#op-espacio").value.trim(), infra: $("input[name=op-infra]:checked", f).value, tipoAccion: $("#op-tipo").value, linea: $("#op-linea").value,
       necesidad: $("#op-necesidad").value.trim(), propuesta: $("#op-propuesta").value.trim(), referentes: refs, articulacion: $("#op-articula").value.trim(), poblacion: pob, estudiantes: $("#op-num").value === "" ? null : Number($("#op-num").value),
       prioridadSugerida: $("#op-prio").value, fuenteSugerida: $("#op-fuente").value, foto: opFoto, estado: "Recibida" };
