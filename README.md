@@ -12,8 +12,9 @@ Formatos en línea y tablero de seguimiento del **Plan de mantenimiento preventi
 | 3. Hoja de vida de equipo | Inventario y datos técnicos de cada equipo tecnológico |
 | 4. Orden de trabajo y recibo | Trabajo realizado, costo, fuente de recursos, registro fotográfico y recibo a satisfacción |
 | 5. Acta de baja de bienes | Propuesta de baja con concepto técnico y destino (gestor RAEE) |
-| 6. Registro consolidado | Prioridad, estado y días hábiles de cada solicitud según la matriz del plan |
-| 7. Informes | Informe PDF por solicitud (solicitud, novedad, ejecución, entrega y fotos) y mensaje para el directivo encargado |
+| 6. Solicitud de optimización | Mejoras propuestas por las áreas académicas o el PFC, con la necesidad y su articulación pedagógica |
+| 7. Registro consolidado | Prioridad, estado y días hábiles de cada solicitud según la matriz del plan |
+| 8. Informes | Informe PDF por solicitud (solicitud, novedad, ejecución, entrega y fotos) y mensaje para el directivo encargado |
 
 ## Estructura del repositorio
 

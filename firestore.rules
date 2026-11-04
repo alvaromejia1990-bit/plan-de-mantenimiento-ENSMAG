@@ -19,6 +19,7 @@ service cloud.firestore {
     match /equipos/{id}      { allow read, write: if institucional(); }
     match /ordenes/{id}      { allow read, write: if institucional(); }
     match /bajas/{id}        { allow read, write: if institucional(); }
+    match /optimizaciones/{id} { allow read, write: if institucional(); }
 
     // Destinatario de los informes (directivo encargado)
     match /config/{id}       { allow read, write: if institucional(); }
