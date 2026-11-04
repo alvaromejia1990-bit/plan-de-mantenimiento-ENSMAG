@@ -3,14 +3,23 @@
  * ------------------------------------------------
  * modo: "local"    → los registros se guardan solo en el navegador de quien usa el portal.
  *                    Sirve para pruebas y demostraciones. No se comparten entre equipos.
- * modo: "firebase" → los registros se guardan en Cloud Firestore (Firebase) y los ve
- *                    todo el comité. Requiere iniciar sesión con una cuenta de Google.
+ * modo: "google"   → los registros y los usuarios se guardan en una hoja de cálculo de
+ *                    Google Sheets por medio de Google Apps Script; las fotos, en Google Drive.
+ *                    Pegue en urlAppsScript la URL de la aplicación web (ver apps-script/INSTRUCCIONES.md).
+ * modo: "firebase" → los registros y los usuarios se guardan en Firebase (Firestore y
+ *                    Authentication) y los comparte toda la institución.
+ *
+ * En todos los modos se ingresa con usuario y contraseña. La primera vez se crea la cuenta
+ * del Rector, que luego crea las cuentas del comité (PM_PCO) y de los docentes.
  *
  * Para pasar a "firebase", siga el README.md (sección "Conectar Firebase") y pegue aquí
  * el objeto de configuración que entrega la consola de Firebase.
  */
 window.PORTAL_CONFIG = {
-  modo: "local",
+  modo: "google",
+
+  // URL de la aplicación web de Google Apps Script (termina en /exec)
+  urlAppsScript: "",
 
   firebase: {
     apiKey: "",
@@ -21,8 +30,4 @@ window.PORTAL_CONFIG = {
     appId: "",
   },
 
-  // Dominio de correo institucional permitido (sin @). Ejemplo: "ensmagirardot.edu.co".
-  // Déjelo vacío para permitir cualquier cuenta de Google. La restricción real
-  // se aplica en las reglas de Firestore (archivo firestore.rules).
-  dominioPermitido: "",
 };

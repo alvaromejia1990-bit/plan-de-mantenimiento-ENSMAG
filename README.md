@@ -16,18 +16,39 @@ Formatos en línea y tablero de seguimiento del **Plan de mantenimiento preventi
 | 7. Registro consolidado | Prioridad, estado y días hábiles de cada solicitud según la matriz del plan |
 | 8. Informes | Informe PDF por solicitud (solicitud, novedad, ejecución, entrega y fotos) y mensaje para el directivo encargado |
 
+## Acceso por usuario, contraseña y rol
+
+Cada vez que se abre la dirección del portal se pide **usuario, contraseña y rol**, con la opción "Mostrar contraseña". El rol elegido debe coincidir con el que rectoría asignó a la cuenta; si no coincide, el portal no deja entrar. La sesión se cierra al cerrar la pestaña o el navegador. La primera vez que se abre aparece **Configuración inicial: cuenta del Rector**; esa cuenta se crea una sola vez.
+
+| Rol | Qué puede hacer |
+| --- | --- |
+| **Rector** (administrador) | Todo el portal. Crea usuarios, cambia roles, activa o desactiva cuentas (menú **Usuarios y roles**) |
+| **PM_PCO** (comité) | Todo, excepto **Orden de trabajo y recibo** y **Acta de baja de bienes** |
+| **Docente** | **Inicio** (tablero), **Solicitud de mantenimiento** y **Solicitud de optimización** |
+
+Cada persona puede cambiar su propia contraseña con el botón **Cambiar contraseña** del encabezado. Todo lo que se diligencia en los formularios queda guardado: solicitudes, inspecciones, hojas de vida, órdenes, bajas y solicitudes de optimización.
+
+**Documentos en PDF**
+
+- **Hoja de vida de equipo**: botón **Ver ficha** en la lista de equipos. Muestra la ficha de inventario con identificación, ubicación, especificaciones, estado, inspecciones, solicitudes y órdenes del equipo. Desde ahí se descarga la **ficha en PDF** con espacios de firma.
+- **Acta de baja de bienes**: botón **Acta PDF** en la lista de propuestas. Genera el acta con los datos del bien, el concepto técnico, la decisión (aprueba / no aprueba) y cuatro espacios de firma: quien propone, concepto técnico, pagador(a) y rector(a).
+
 ## Estructura del repositorio
 
 ```
 portal-mantenimiento-ensma/
 ├── index.html          Portal completo (estilos y lógica)
 ├── js/
-│   ├── config.js       Modo de almacenamiento y datos de Firebase
-│   └── almacen.js      Capa de datos: navegador (local) o Firebase
+│   ├── config.js       Modo de almacenamiento (google, firebase o local)
+│   └── almacen.js      Capa de datos y de acceso
 ├── assets/
 │   ├── escudo.png      Escudo institucional
 │   └── favicon.png
-├── firestore.rules     Reglas de seguridad para Firebase
+├── apps-script/
+│   ├── Code.gs           Servidor en Google Apps Script (hoja de cálculo + Drive)
+│   ├── appsscript.json   Manifiesto del proyecto de Apps Script
+│   └── INSTRUCCIONES.md  Paso a paso para conectar Google Sheets
+├── firestore.rules     Reglas de seguridad para Firebase (opción alternativa)
 ├── .nojekyll           Indica a GitHub Pages que publique los archivos tal cual
 └── README.md
 ```
@@ -49,41 +70,39 @@ portal-mantenimiento-ensma/
 
 Con la configuración inicial (`modo: "local"`) el portal ya funciona, pero **cada navegador guarda sus propios registros**: sirve para pruebas y capacitación, no para el trabajo del comité.
 
-## 2. Conectar Firebase (registros compartidos)
+## 2. Guardar los datos en un servidor: Google Sheets (recomendado)
 
-Para que todo el comité vea y actualice los mismos registros se usa Cloud Firestore (plan gratuito Spark).
+El portal viene configurado en `modo: "google"`: los usuarios y todos los formatos se guardan en una **hoja de cálculo de Google** de la cuenta institucional y las fotos en **Google Drive**. En el navegador no queda ningún registro. Siga **[apps-script/INSTRUCCIONES.md](apps-script/INSTRUCCIONES.md)**: crear la hoja, pegar `Code.gs`, publicar la aplicación web y pegar su URL en `js/config.js`.
 
-1. Entre a <https://console.firebase.google.com> con una cuenta institucional y cree un proyecto (por ejemplo `mantenimiento-ensma`). Google Analytics no es necesario.
-2. **Build → Firestore Database → Create database**. Elija la ubicación `southamerica-east1` (São Paulo) o `us-east1` e inicie en **modo de producción**.
-3. **Build → Authentication → Get started → Sign-in method → Google → Enable**.
-4. **Authentication → Settings → Authorized domains → Add domain**: agregue `USUARIO.github.io`.
-5. **Project settings (engranaje) → Your apps → Web (`</>`)**: registre la app y copie el objeto `firebaseConfig`.
-6. Abra `js/config.js`, cambie `modo: "local"` por `modo: "firebase"` y pegue los valores en `firebase: { ... }`. Escriba el dominio del correo institucional en `dominioPermitido` (por ejemplo `ensmagirardot.edu.co`).
-7. **Firestore Database → Rules**: copie el contenido de `firestore.rules`, reemplace `TU-DOMINIO[.]edu[.]co` por el dominio institucional y publique.
-8. Suba el `config.js` modificado a GitHub. Al abrir el portal aparecerá el botón **Iniciar sesión con Google**.
+Mientras `urlAppsScript` esté vacío, el portal funciona en modo local (solo para pruebas).
 
-> Los valores de `firebaseConfig` no son secretos: identifican el proyecto. La protección de los datos la dan las reglas de Firestore y el inicio de sesión; no publique el portal sin configurar las reglas del paso 7.
+## 3. Opción alternativa: Firebase
 
-### Si la institución no tiene correo con dominio propio
+En **modo local** los usuarios y los registros quedan solo en el navegador donde se crearon, y la contraseña se verifica en ese mismo navegador: sirve para pruebas y capacitación, no protege la información. Para el trabajo real de la institución use Firebase (plan gratuito Spark).
 
-Deje `dominioPermitido: ""` y, en `firestore.rules`, cambie la función `institucional()` por una lista de correos autorizados:
+1. Entre a <https://console.firebase.google.com> con una cuenta institucional y cree un proyecto (por ejemplo `mantenimiento-ensma`).
+2. **Build → Firestore Database → Create database**, ubicación `southamerica-east1` (São Paulo), **modo de producción**.
+3. **Build → Authentication → Get started → Sign-in method → Email/Password → Enable** (solo la primera opción; no active "Email link").
+4. **Project settings (engranaje) → Your apps → Web (`</>`)**: registre la app y copie el objeto `firebaseConfig`.
+5. En `js/config.js` cambie `modo: "local"` por `modo: "firebase"` y pegue los valores en `firebase: { ... }`.
+6. **Firestore Database → Rules**: pegue el contenido de `firestore.rules` y publique.
+7. Suba los archivos a GitHub, abra el portal y cree la **cuenta del Rector** en la pantalla de configuración inicial. Las reglas impiden crear una segunda cuenta de Rector por esa vía.
+8. Con la cuenta del Rector entre a **Usuarios y roles** y cree las cuentas del comité (PM_PCO) y de los docentes.
 
-```
-function institucional() {
-  return request.auth != null && request.auth.token.email in [
-    'rectoria@gmail.com',
-    'coordinacion@gmail.com',
-    'lider.tic@gmail.com'
-  ];
-}
-```
+> Los valores de `firebaseConfig` no son secretos: identifican el proyecto. La protección de los datos la dan el inicio de sesión y las reglas de `firestore.rules`, que aplican los permisos de cada rol en el servidor. No publique el portal en modo Firebase sin las reglas del paso 6.
+
+**Detalles técnicos de las cuentas**
+
+- Internamente cada usuario se registra en Firebase Authentication como `usuario@usuarios.ensma-portal.app`. Ese correo no existe ni recibe mensajes; solo sirve para el inicio de sesión.
+- Si alguien olvida su contraseña, el Rector puede **desactivar** la cuenta y crear una nueva con otro usuario. Si se quiere conservar el mismo usuario, borre primero la cuenta en **Authentication → Users** de la consola de Firebase y el documento correspondiente en la colección `usuarios`, y luego créela de nuevo desde el portal.
+- En modo local el Rector sí puede **restablecer contraseñas** desde la tabla de usuarios.
 
 ## Uso y límites
 
 - **Fotos**: se reducen en el navegador antes de guardarse (solicitud: 1 foto; orden de trabajo e inspección física: hasta 3).
 - **Informes PDF**: se generan en el navegador con jsPDF. El correo al directivo se prepara con un enlace `mailto:` y un botón para copiar el mensaje; el PDF se adjunta manualmente.
 - **Plan gratuito de Firebase**: 1 GiB de almacenamiento y 50.000 lecturas / 20.000 escrituras diarias, suficiente para el uso de una institución educativa.
-- **Librerías externas** (se cargan desde CDN): jsPDF 2.5.1, Chart.js 4.4.1, Firebase 10.12.2 y las fuentes Barlow Semi Condensed y Work Sans de Google Fonts.
+- **Librerías externas** (se cargan desde CDN): jsPDF 2.5.1, Chart.js 4.4.1, Firebase 10.12.2 (Authentication y Firestore) y las fuentes Barlow Semi Condensed y Work Sans de Google Fonts.
 
 ## Respaldo de la información
 

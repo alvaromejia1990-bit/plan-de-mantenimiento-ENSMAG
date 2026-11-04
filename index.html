@@ -80,7 +80,7 @@ form .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); ga
 form .full { grid-column: 1 / -1; }
 label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 600; }
 label .hint { font-weight: 400; color: var(--tenue); font-size: 12.5px; }
-input[type=text], input[type=date], input[type=number], input[type=email], select, textarea {
+input[type=text], input[type=date], input[type=number], input[type=email], input[type=password], select, textarea {
   width: 100%; padding: 9px 11px; border: 1.5px solid var(--campo-borde); border-radius: 8px; background: var(--campo); font-weight: 400;
 }
 textarea { min-height: 90px; resize: vertical; }
@@ -185,6 +185,30 @@ dl.kv dd { margin: 0; }
 .pill.pfc { background: color-mix(in srgb, var(--magenta) 16%, transparent); color: var(--magenta); }
 .pill.area { background: var(--azul-claro); color: var(--azul); }
 .origen-pfc { border-left: 4px solid var(--magenta); }
+#sesionbar { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; font-size: 13px; max-width: 420px; }
+#sesionbar .quien { text-align: right; line-height: 1.3; }
+#sesionbar .quien b { color: var(--azul); display: block; }
+#sesionbar .btn { padding: 7px 12px; font-size: 13px; }
+.modal { position: fixed; inset: 0; z-index: 900; background: rgba(15, 25, 40, .45); display: grid; place-items: center; padding: 20px; }
+.modal .caja { background: var(--blanco); border-radius: 14px; border-top: 5px solid var(--azul); padding: 22px 24px; width: 100%; max-width: 420px; display: grid; gap: 12px; }
+.modal h3 { font-size: 19px; color: var(--azul); }
+.ver { display: flex; gap: 8px; align-items: center; font-weight: 500; font-size: 13px; }
+.ver input { width: 16px; height: 16px; accent-color: var(--azul); }
+.rolpill { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600; background: var(--azul-claro); color: var(--azul); }
+.rolpill.Rector { background: color-mix(in srgb, var(--magenta) 16%, transparent); color: var(--magenta); }
+.ficha { border: 1.5px solid #b9c9e0; border-radius: 12px; padding: 20px; margin-bottom: 16px; background: var(--blanco); }
+.ficha .fh { display: flex; gap: 14px; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--magenta); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.ficha .fh .izq { display: flex; gap: 12px; align-items: center; }
+.ficha .fh img { width: 50px; }
+.ficha .fh .tt { font-family: var(--display); font-size: 19px; color: var(--azul); font-weight: 700; }
+.ficha .codigo { font-family: var(--display); font-size: 24px; font-weight: 700; color: var(--azul); text-align: right; }
+.ficha h4 { font-family: var(--display); font-size: 15.5px; color: var(--azul); margin: 14px 0 8px; }
+.kvgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.kvgrid div { background: var(--fondo); border-radius: 8px; padding: 8px 10px; }
+.kvgrid span { display: block; font-size: 11.5px; color: var(--tenue); text-transform: uppercase; letter-spacing: .04em; }
+.kvgrid b { font-weight: 600; font-size: 14px; }
+.kvgrid .ancho { grid-column: 1 / -1; }
+@media (max-width: 700px) { .kvgrid { grid-template-columns: 1fr 1fr; } }
 footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(--tenue); font-size: 12.5px; }
 
 @media (max-width: 920px) {
@@ -224,9 +248,11 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     <a href="#orden-trabajo" data-v="orden-trabajo"><span class="n">4</span>Orden de trabajo y recibo</a>
     <a href="#baja" data-v="baja"><span class="n">5</span>Acta de baja de bienes</a>
     <a href="#optimizacion" data-v="optimizacion"><span class="n">6</span>Solicitud de optimización</a>
-    <div class="grp">Seguimiento</div>
+    <div class="grp" data-grp="seg">Seguimiento</div>
     <a href="#registro" data-v="registro"><span class="n">7</span>Registro consolidado</a>
     <a href="#informes" data-v="informes"><span class="n">8</span>Informes de mantenimiento</a>
+    <div class="grp" data-grp="adm" hidden>Administración</div>
+    <a href="#usuarios" data-v="usuarios" hidden><span class="n">·</span>Usuarios y roles</a>
   </nav>
 
   <main>
@@ -409,9 +435,10 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
         </div>
         <div class="actions"><button class="btn" type="submit" data-save>Guardar hoja de vida</button><button class="btn sec" type="reset">Limpiar</button><span class="msg" role="status"></span></div>
       </form>
+      <div id="ficha-eq"></div>
       <div class="card"><h3>Equipos registrados</h3>
         <div class="filters"><input type="text" id="e-buscar" placeholder="Buscar por código, tipo o ubicación" aria-label="Buscar equipo"></div>
-        <div class="tblwrap"><table class="reg" id="t-equipos"><thead><tr><th>Código</th><th>Tipo</th><th>Marca / modelo</th><th>Ubicación</th><th>Estado</th><th>Último mantenimiento</th><th></th></tr></thead><tbody></tbody></table></div></div>
+        <div class="tblwrap"><table class="reg" id="t-equipos"><thead><tr><th>Código</th><th>Tipo</th><th>Marca / modelo</th><th>Ubicación</th><th>Estado</th><th>Último mantenimiento</th><th>Ficha e informe</th></tr></thead><tbody></tbody></table></div></div>
     </section>
 
     <!-- 4 ORDEN DE TRABAJO -->
@@ -466,8 +493,9 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label><span>Observaciones</span><input type="text" id="b-obs" name="observaciones"></label>
         </div>
         <div class="actions"><button class="btn" type="submit" data-save>Registrar propuesta de baja</button><button class="btn sec" type="reset">Limpiar</button><span class="msg" role="status"></span></div>
+        <p class="hint" style="margin:10px 0 0">Después de registrar la propuesta, descargue el acta en PDF desde la tabla de abajo para recoger las firmas.</p>
       </form>
-      <div class="card"><h3>Propuestas de baja</h3><div class="tblwrap"><table class="reg" id="t-bajas"><thead><tr><th>Fecha</th><th>Código</th><th>Bien</th><th>Causa</th><th>Destino</th><th>Borrado</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="card"><h3>Propuestas de baja</h3><div class="tblwrap"><table class="reg" id="t-bajas"><thead><tr><th>Fecha</th><th>Código</th><th>Bien</th><th>Causa</th><th>Destino</th><th>Borrado</th><th>Acta</th></tr></thead><tbody></tbody></table></div></div>
     </section>
 
     <!-- 6 OPTIMIZACION -->
@@ -557,6 +585,26 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
         <div class="mailbox" id="inf-mail" style="margin-top:12px; display:none"></div>
       </div>
     </section>
+    <!-- USUARIOS -->
+    <section class="view" id="v-usuarios">
+      <div class="head"><div><div class="code">Administración · Solo Rector</div><h2>Usuarios y roles</h2>
+        <p class="lead">Cree las cuentas del comité y de los docentes. Cada rol ve solo los espacios que le corresponden: <b>Rector</b>, todo el portal; <b>PM_PCO</b> (comité), todo excepto orden de trabajo y acta de baja; <b>Docente</b>, inicio, solicitud de mantenimiento y solicitud de optimización.</p></div></div>
+      <form class="card" id="f-usuario" novalidate>
+        <h3>Crear usuario</h3>
+        <div class="grid">
+          <label><span class="req">Nombre completo</span><input type="text" id="u-nombre" required></label>
+          <label><span class="req">Usuario</span><span class="hint">Letras sin tilde, números, punto o guion. Ej.: maria.lopez</span><input type="text" id="u-usuario" required autocapitalize="none" spellcheck="false"></label>
+          <label><span>Cargo</span><input type="text" id="u-cargo" placeholder="Ej.: Docente de matemáticas"></label>
+          <label><span class="req">Rol</span><select id="u-rol" required><option value="">Seleccione…</option><option value="Docente">Docente</option><option value="PM_PCO">PM_PCO (comité)</option><option value="Rector">Rector (administrador)</option></select></label>
+          <label><span class="req">Contraseña inicial</span><span class="hint">Mínimo 8 caracteres. Entréguela a la persona para que la cambie.</span><input type="password" id="u-clave" required autocomplete="new-password"></label>
+          <label><span class="req">Repita la contraseña</span><input type="password" id="u-clave2" required autocomplete="new-password"></label>
+          <label class="ver full"><input type="checkbox" id="u-ver"> Mostrar contraseña</label>
+        </div>
+        <div class="actions"><button class="btn" type="submit">Crear usuario</button><button class="btn sec" type="reset">Limpiar</button><span class="msg" role="status"></span></div>
+      </form>
+      <div class="card"><h3>Usuarios registrados</h3><p class="msg" id="u-msg" role="status"></p>
+        <div class="tblwrap"><table class="reg" id="t-usuarios"><thead><tr><th>Usuario</th><th>Nombre</th><th>Cargo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></div>
+    </section>
   </main>
 </div>
 <footer>Escuela Normal Superior María Auxiliadora · Girardot, Cundinamarca · Plan de mantenimiento preventivo y correctivo, ruta de mejoramiento de la Guía 34 del MEN.</footer>
@@ -605,9 +653,27 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
   const ACTS_TEC = ["Limpieza física interna y externa", "Cambio de pasta térmica", "Actualización del sistema operativo", "Actualización y análisis de antivirus", "Desinstalación de programas no autorizados", "Limpieza de filtros y lentes", "Cambio de consumibles", "Revisión de cableado y conectores", "Cambio de contraseñas de red", "Copia de seguridad realizada", "Prueba de restauración de copias", "Revisión de cuentas de usuario"];
 
   // ---------- navegación por hash ----------
-  const VISTAS = ["inicio", "solicitud", "inspeccion", "hoja-vida", "orden-trabajo", "baja", "optimizacion", "registro", "informes"];
+  const VISTAS = ["inicio", "solicitud", "inspeccion", "hoja-vida", "orden-trabajo", "baja", "optimizacion", "registro", "informes", "usuarios"];
+  const ACCESO = {
+    Rector: VISTAS,
+    PM_PCO: ["inicio", "solicitud", "inspeccion", "hoja-vida", "optimizacion", "registro", "informes"],
+    Docente: ["inicio", "solicitud", "optimizacion"],
+  };
+  const NOMBRE_ROL = { Rector: "Administrador (Rector)", PM_PCO: "Comité (PM_PCO)", Docente: "Docente" };
+  let SES = null, ROL = null;
+  const permitido = (v) => (ROL ? (ACCESO[ROL] || []).includes(v) : v !== "usuarios");
+  const gestiona = () => ROL !== "Docente";
+  function aplicarRol() {
+    $$("nav.menu a[data-v]").forEach((a) => (a.hidden = !permitido(a.dataset.v)));
+    $$("a.fmt").forEach((a) => (a.hidden = !permitido(a.getAttribute("href").slice(1))));
+    const seg = $('[data-grp="seg"]'); if (seg) seg.hidden = !permitido("registro") && !permitido("informes");
+    const adm = $('[data-grp="adm"]'); if (adm) adm.hidden = !permitido("usuarios");
+    mostrar();
+  }
   function mostrar() {
-    const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "inicio";
+    let v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "inicio";
+    if (!permitido(v)) v = "inicio";
+    if (v === "usuarios") cargarUsuarios();
     VISTAS.forEach((x) => $("#v-" + x).classList.toggle("on", x === v));
     $$("nav.menu a").forEach((a) => a.toggleAttribute("aria-current", a.dataset.v === v) || a.dataset.v === v && a.setAttribute("aria-current", "page"));
     $$("nav.menu a").forEach((a) => { if (a.dataset.v === v) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
@@ -803,7 +869,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
       <td><b>${esc(o.espacio)}</b><br>${esc(o.sede)} · ${esc(o.infra)}<br>${esc(o.tipoAccion)}${o.foto ? `<br><img class="thumb" src="${o.foto}" alt="Foto del espacio">` : ""}</td>
       <td><b>Necesidad:</b> ${esc(o.necesidad)}<br><b>Propuesta:</b> ${esc(o.propuesta)}<br><b>Articulación:</b> ${esc(o.articulacion)}<br><span class="hint">${esc((o.referentes || []).join(" · "))}</span></td>
       <td>${esc(o.linea)}</td><td>${esc(o.prioridadSugerida)}</td>
-      <td><select data-opt="${esc(o.id)}" aria-label="Estado de ${esc(o.numero)}" ${dis}>${EST_OPT.map((e) => `<option ${o.estado === e ? "selected" : ""}>${e}</option>`).join("")}</select></td></tr>`).join("");
+      <td><select data-opt="${esc(o.id)}" aria-label="Estado de ${esc(o.numero)}" ${dis || (gestiona() ? "" : "disabled")}>${EST_OPT.map((e) => `<option ${o.estado === e ? "selected" : ""}>${e}</option>`).join("")}</select></td></tr>`).join("");
   }
   $$("#op-f-origen, #op-f-estado").forEach((x) => x.addEventListener("change", renderOpt));
   $("#t-optim").addEventListener("change", async (e) => {
@@ -977,6 +1043,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     plugins: { legend: { display: false, labels: { color: COL.txt, font: { family: "Work Sans" } } }, tooltip: { titleFont: { family: "Work Sans" }, bodyFont: { family: "Work Sans" } } },
     scales: { x: { grid: { color: COL.grid }, ticks: { color: COL.txt, font: { family: "Work Sans", size: 11 } } }, y: { beginAtZero: true, grid: { color: COL.grid }, ticks: { color: COL.txt, precision: 0, font: { family: "Work Sans", size: 11 } } } } }, extra);
   function irRegistro(campo, valor) {
+    if (!permitido("registro")) return;
     const F = filtroDash(); $("#fl-estado").value = ""; $("#fl-prio").value = ""; $("#fl-texto").value = ""; $("#fl-infra").value = F.infra;
     $(campo).value = valor; location.hash = "#registro"; renderSol();
   }
@@ -1136,7 +1203,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     const q = $("#e-buscar").value.toLowerCase();
     const rows = EQ.filter((e) => !q || `${e.codigo} ${e.tipo} ${e.ubicacion}`.toLowerCase().includes(q));
     const tb = $("#t-equipos tbody");
-    tb.innerHTML = rows.length ? rows.map((e) => `<tr><td class="num"><b>${esc(e.codigo)}</b></td><td>${esc(e.tipo)}</td><td>${esc([e.marca, e.modelo].filter(Boolean).join(" ")) || "—"}</td><td>${esc(e.ubicacion)}</td><td>${esc(e.estado)}</td><td class="num">${fmtFecha(e.ultimoMantenimiento)}</td><td><button class="btn sec" type="button" data-edit="${esc(e.id)}">Editar</button></td></tr>`).join("")
+    tb.innerHTML = rows.length ? rows.map((e) => `<tr><td class="num"><b>${esc(e.codigo)}</b></td><td>${esc(e.tipo)}</td><td>${esc([e.marca, e.modelo].filter(Boolean).join(" ")) || "—"}</td><td>${esc(e.ubicacion)}</td><td>${esc(e.estado)}</td><td class="num">${fmtFecha(e.ultimoMantenimiento)}</td><td style="white-space:nowrap"><button class="btn sec" type="button" data-ficha="${esc(e.id)}">Ver ficha</button> <button class="btn sec" type="button" data-edit="${esc(e.id)}">Editar</button></td></tr>`).join("")
       : `<tr><td colspan="7" class="empty">${EQ.length ? "Ningún equipo coincide." : "Aún no hay equipos registrados."}</td></tr>`;
   }
   $("#e-buscar").addEventListener("input", renderEq);
@@ -1147,7 +1214,8 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     renderSimple("#t-insp", INS, [(r) => fmtFecha(r.fecha), (r) => esc(r.tipo || "Física"), (r) => esc(r.sede), (r) => r.tipo === "Tecnológica" ? `<b>${esc(r.codigo)}</b> · ${esc(r.tipoEquipo)}<br>${esc(r.espacio)}` : `<b>${esc(r.espacio)}</b>${r.tipoEspacio ? "<br>" + esc(r.tipoEspacio) : ""}${r.apto && r.apto !== "Sí" ? ` <span class="pill p1">${esc(r.apto.split(":")[0])}</span>` : ""}`, (r) => esc(r.inspector), (r) => r.hallazgos ? `<span class="pill p2">${r.hallazgos}</span>` : "0"], "Aún no hay inspecciones registradas.");
     $("#it-codigos").innerHTML = EQ.map((e) => `<option value="${esc(e.codigo)}">${esc(e.tipo)} · ${esc(e.ubicacion)}</option>`).join("");
     renderSimple("#t-ordenes", ORD, [(r) => fmtFecha(r.fin), (r) => esc(r.tipo), (r) => esc(r.objeto), (r) => esc(r.ejecutor), (r) => pesos(r.costo), (r) => esc(r.recibido), (r) => (r.fotos || []).length], "Aún no hay órdenes de trabajo.");
-    renderSimple("#t-bajas", BAJ, [(r) => fmtFecha(r.fecha), (r) => `<b>${esc(r.codigo)}</b>`, (r) => esc(r.descripcion), (r) => esc(r.causa), (r) => esc(r.destino), (r) => esc(r.borrado)], "Aún no hay propuestas de baja.");
+    renderSimple("#t-bajas", BAJ, [(r) => fmtFecha(r.fecha), (r) => `<b>${esc(r.codigo)}</b>`, (r) => esc(r.descripcion), (r) => esc(r.causa), (r) => esc(r.destino), (r) => esc(r.borrado), (r) => `<button class="btn sec" type="button" data-acta="${esc(r.id)}">Acta PDF</button>`], "Aún no hay propuestas de baja.");
+    if (FICHA_ID) verFicha(FICHA_ID);
   }
   // ---------- informes ----------
   let CFG = {};
@@ -1276,12 +1344,209 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     catch (e) { manejarError(f, e); } finally { btn.disabled = !db; }
   });
 
+  // ---------- utilidades PDF compartidas ----------
+  async function descargarPDF(nombre, blob, msgEl) {
+    const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+    const m = msgEl || { textContent: "", className: "" };
+    if (!dl) { m.className = "msg err"; m.textContent = "Este navegador no permite descargar archivos."; return; }
+    try { await dl.save({ filename: nombre, data: blob }); m.className = "msg ok"; m.textContent = "Archivo descargado: " + nombre; }
+    catch (e) { m.className = "msg err"; m.textContent = e && e.code === "declined" ? "Descarga cancelada." : "No se pudo descargar el archivo."; }
+  }
+  async function nuevoPDF(titulo, sub) {
+    const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit: "mm", format: "letter" });
+    const P = { doc, W: 215.9, M: 18, y: 14, AZUL: [29, 79, 140], MAG: [184, 23, 90], GRIS: [90, 100, 117], TINTA: [27, 35, 48], FONDO: [244, 247, 251] };
+    P.CW = P.W - 2 * P.M;
+    const [ew, eh] = await dims(ESCUDO); const eH = 17 * eh / ew; doc.addImage(ESCUDO, "PNG", P.M, P.y, 17, eH);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...P.MAG); doc.text("INSTITUCIÓN EDUCATIVA ESCUELA NORMAL SUPERIOR MARÍA AUXILIADORA", P.M + 22, P.y + 5);
+    doc.setFontSize(14.5); doc.setTextColor(...P.AZUL); doc.text(titulo, P.M + 22, P.y + 12);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.8); doc.setTextColor(...P.GRIS); doc.text(sub, P.M + 22, P.y + 17);
+    P.y += eH + 3; doc.setDrawColor(...P.MAG); doc.setLineWidth(0.8); doc.line(P.M, P.y, P.W - P.M, P.y); P.y += 7;
+    P.nueva = (h) => { if (P.y + h > 264) { doc.addPage(); P.y = 18; } };
+    P.titulo = (t) => { P.nueva(14); doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...P.AZUL); doc.text(t, P.M, P.y); P.y += 2; doc.setDrawColor(214, 220, 230); doc.setLineWidth(0.3); doc.line(P.M, P.y, P.W - P.M, P.y); P.y += 4; };
+    P.grilla = (pares, cols = 3) => {
+      const g = 3, w = (P.CW - g * (cols - 1)) / cols; let i = 0;
+      while (i < pares.length) {
+        const fila = []; let usado = 0;
+        while (i < pares.length && usado < cols) { const span = pares[i][2] ? cols : 1; if (usado + span > cols) break; fila.push([pares[i], usado, span]); usado += span; i++; if (span === cols) break; }
+        let h = 0; const lin = fila.map(([p, , span]) => { const l = doc.setFontSize(9.5).splitTextToSize(String(p[1] || "—"), w * span + g * (span - 1) - 6); h = Math.max(h, 9 + l.length * 4.2); return l; });
+        P.nueva(h + 2);
+        fila.forEach(([p, col, span], k) => { const x = P.M + col * (w + g), ww = w * span + g * (span - 1); doc.setFillColor(...P.FONDO); doc.roundedRect(x, P.y, ww, h, 1.5, 1.5, "F"); doc.setFont("helvetica", "normal"); doc.setFontSize(7.2); doc.setTextColor(...P.GRIS); doc.text(String(p[0]).toUpperCase(), x + 3, P.y + 4.5); doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(...P.TINTA); doc.text(lin[k], x + 3, P.y + 9.3); });
+        P.y += h + g;
+      }
+      P.y += 2;
+    };
+    P.tabla = (cab, filas, anchos) => {
+      const tot = anchos.reduce((a, b) => a + b, 0), ws = anchos.map((a) => (a / tot) * P.CW);
+      const dibFila = (vals, head) => {
+        doc.setFontSize(8.5); doc.setFont("helvetica", head ? "bold" : "normal");
+        const lin = vals.map((v, k) => doc.splitTextToSize(String(v ?? "—"), ws[k] - 3)); const h = Math.max(...lin.map((l) => l.length)) * 3.9 + 3;
+        P.nueva(h); let x = P.M;
+        if (head) { doc.setFillColor(...P.AZUL); doc.rect(P.M, P.y, P.CW, h, "F"); doc.setTextColor(255, 255, 255); } else { doc.setTextColor(...P.TINTA); }
+        lin.forEach((l, k) => { doc.text(l, x + 1.5, P.y + 4); x += ws[k]; });
+        doc.setDrawColor(214, 220, 230); doc.setLineWidth(0.2); doc.line(P.M, P.y + h, P.M + P.CW, P.y + h); P.y += h;
+      };
+      dibFila(cab, true);
+      if (!filas.length) dibFila(["Sin registros"].concat(cab.slice(1).map(() => "")), false); else filas.forEach((f) => dibFila(f, false));
+      P.y += 4;
+    };
+    P.parrafo = (t, size = 9.5) => { doc.setFont("helvetica", "normal"); doc.setFontSize(size); doc.setTextColor(...P.TINTA); const l = doc.splitTextToSize(String(t || ""), P.CW); P.nueva(l.length * 4.6 + 2); doc.text(l, P.M, P.y); P.y += l.length * 4.6 + 2; };
+    P.firmas = (titulo, lista) => {
+      const cols = lista.length === 3 ? 3 : 2, w = (P.CW - 10 * (cols - 1)) / cols, filas = Math.ceil(lista.length / cols);
+      P.nueva(filas * 27 + 10); P.titulo(titulo);
+      for (let i = 0; i < lista.length; i += cols) {
+        const yy = P.y + 13;
+        lista.slice(i, i + cols).forEach((f, j) => { const x = P.M + j * (w + 10); doc.setDrawColor(...P.GRIS); doc.setLineWidth(0.3); doc.line(x, yy, x + w, yy); doc.setFont("helvetica", "bold"); doc.setFontSize(8.6); doc.setTextColor(...P.TINTA); doc.text(doc.splitTextToSize(f[0], w)[0], x, yy + 4.3); doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(...P.GRIS); doc.text("Nombre: " + (f[1] || ""), x, yy + 8.6); doc.text("C.C.:", x, yy + 12.6); doc.text("Fecha:", x + w * 0.55, yy + 12.6); });
+        P.y += 27;
+      }
+    };
+    P.pie = (t) => { const n = doc.getNumberOfPages(); for (let p = 1; p <= n; p++) { doc.setPage(p); doc.setFont("helvetica", "normal"); doc.setFontSize(7.8); doc.setTextColor(...P.GRIS); doc.text(`${t} · Página ${p} de ${n}`, P.W / 2, 272, { align: "center" }); } };
+    return P;
+  }
+
+  // ---------- ficha de inventario (hoja de vida) ----------
+  let FICHA_ID = null;
+  function historialEquipo(eq) {
+    const ins = INS.filter((r) => r.tipo === "Tecnológica" && r.codigo === eq.codigo).sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
+    const sol = SOL.filter((s) => s.codigo && s.codigo === eq.codigo).sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
+    const ord = ORD.filter((o) => sol.some((s) => s.id === o.solicitud) || (o.objeto || "").includes(eq.codigo)).sort((a, b) => String(b.fin).localeCompare(String(a.fin)));
+    return { ins, sol, ord, prox: (ins.find((r) => r.proximaRevision) || {}).proximaRevision || "" };
+  }
+  function verFicha(id) {
+    const eq = EQ.find((e) => e.id === id); const box = $("#ficha-eq"); FICHA_ID = eq ? id : null;
+    if (!eq) { box.innerHTML = ""; return; }
+    const H = historialEquipo(eq); const kv = (l, v, ancho) => `<div class="${ancho ? "ancho" : ""}"><span>${esc(l)}</span><b>${esc(v || "—")}</b></div>`;
+    const estCls = { "Operativo": "p3", "Operativo con fallas": "p2", "En reparación": "p2", "Para baja": "p1" }[eq.estado] || "p4";
+    box.innerHTML = `<div class="ficha" id="ficha-print"><div class="fh"><div class="izq"><img src="${ESCUDO}" alt=""><div><div class="code">Ficha de inventario · Hoja de vida</div><div class="tt">${esc(eq.tipo)} ${esc([eq.marca, eq.modelo].filter(Boolean).join(" "))}</div></div></div><div><div class="codigo">${esc(eq.codigo)}</div><div style="text-align:right"><span class="pill ${estCls}">${esc(eq.estado)}</span></div></div></div>
+      <h4>Identificación</h4><div class="kvgrid">${kv("Código de inventario", eq.codigo)}${kv("Tipo de equipo", eq.tipo)}${kv("Procedencia", eq.procedencia)}${kv("Marca", eq.marca)}${kv("Modelo", eq.modelo)}${kv("Serial", eq.serial)}</div>
+      <h4>Ubicación y responsable</h4><div class="kvgrid">${kv("Ubicación", eq.ubicacion)}${kv("Responsable", eq.responsable)}${kv("Fecha de registro", fmtFecha(eq.creado))}</div>
+      <h4>Especificaciones técnicas</h4><div class="kvgrid">${kv("Especificaciones", eq.especificaciones, true)}${kv("Licencias", eq.licencias, true)}</div>
+      <h4>Estado y mantenimiento</h4><div class="kvgrid">${kv("Estado actual", eq.estado)}${kv("Último mantenimiento", fmtFecha(eq.ultimoMantenimiento))}${kv("Próxima revisión sugerida", H.prox ? fmtFecha(H.prox) : "—")}${kv("Observaciones", eq.observaciones, true)}</div>
+      <h4>Inspecciones tecnológicas (${H.ins.length})</h4><div class="tblwrap"><table class="reg" style="min-width:600px"><thead><tr><th>Fecha</th><th>Tipo de visita</th><th>Estado general</th><th>Malo / crítico</th><th>Inspector</th></tr></thead><tbody>${H.ins.length ? H.ins.map((r) => `<tr><td class="num">${fmtFecha(r.fecha)}</td><td>${esc(r.tipoMantenimiento)}</td><td>${esc(r.estadoGeneral)}</td><td>${r.hallazgos || 0}</td><td>${esc(r.inspector)}</td></tr>`).join("") : '<tr><td colspan="5" class="empty">Sin inspecciones registradas.</td></tr>'}</tbody></table></div>
+      <h4>Solicitudes y órdenes de trabajo (${H.sol.length + H.ord.length})</h4><div class="tblwrap"><table class="reg" style="min-width:600px"><thead><tr><th>Fecha</th><th>Registro</th><th>Detalle</th><th>Estado o resultado</th></tr></thead><tbody>${H.sol.length + H.ord.length ? H.sol.map((s) => `<tr><td class="num">${fmtFecha(s.fecha)}</td><td>Solicitud ${esc(s.numero)}</td><td>${esc(s.componente)}: ${esc(s.descripcion)}</td><td>${esc(s.estado)}</td></tr>`).join("") + H.ord.map((o) => `<tr><td class="num">${fmtFecha(o.fin)}</td><td>Orden de trabajo</td><td>${esc(o.trabajo)}</td><td>Recibido: ${esc(o.recibido)}</td></tr>`).join("") : '<tr><td colspan="4" class="empty">Sin solicitudes ni órdenes asociadas.</td></tr>'}</tbody></table></div>
+      <div class="actions"><button class="btn" type="button" id="ficha-pdf">Descargar ficha en PDF</button><button class="btn sec" type="button" id="ficha-cerrar">Cerrar ficha</button><span class="msg" id="ficha-msg" role="status"></span></div></div>`;
+    $("#ficha-cerrar").addEventListener("click", () => { FICHA_ID = null; box.innerHTML = ""; });
+    $("#ficha-pdf").addEventListener("click", () => fichaPDF(eq, $("#ficha-msg")));
+  }
+  $("#t-equipos").addEventListener("click", (e) => { const b = e.target.closest("button[data-ficha]"); if (!b) return; verFicha(b.dataset.ficha); $("#ficha-eq").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  async function fichaPDF(eq, msg) {
+    if (!window.jspdf) { msg.className = "msg err"; msg.textContent = "No se pudo cargar el generador de PDF. Recargue la página."; return; }
+    msg.className = "msg"; msg.textContent = "Generando ficha…";
+    const H = historialEquipo(eq);
+    const P = await nuevoPDF("Ficha de inventario · Hoja de vida de equipo", "Infraestructura tecnológica · Plan de mantenimiento · Generada el " + fmtFecha(hoy()));
+    const { doc } = P;
+    doc.setFillColor(...P.AZUL); doc.roundedRect(P.M, P.y, P.CW, 16, 2, 2, "F"); doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(255, 255, 255); doc.text(String(eq.codigo), P.M + 5, P.y + 10.5);
+    doc.setFontSize(10); doc.text(`${eq.tipo || ""} ${[eq.marca, eq.modelo].filter(Boolean).join(" ")}`.trim(), P.M + P.CW - 5, P.y + 7, { align: "right" }); doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.text("Estado: " + (eq.estado || "—"), P.M + P.CW - 5, P.y + 12, { align: "right" }); P.y += 22;
+    P.titulo("1. Identificación del equipo"); P.grilla([["Código de inventario", eq.codigo], ["Tipo de equipo", eq.tipo], ["Procedencia", eq.procedencia], ["Marca", eq.marca], ["Modelo", eq.modelo], ["Serial", eq.serial]]);
+    P.titulo("2. Ubicación y responsable"); P.grilla([["Ubicación", eq.ubicacion], ["Responsable", eq.responsable], ["Fecha de registro", fmtFecha(eq.creado)]]);
+    P.titulo("3. Especificaciones técnicas"); P.grilla([["Especificaciones", eq.especificaciones, true], ["Licencias", eq.licencias, true]]);
+    P.titulo("4. Estado y mantenimiento"); P.grilla([["Estado actual", eq.estado], ["Último mantenimiento", fmtFecha(eq.ultimoMantenimiento)], ["Próxima revisión sugerida", H.prox ? fmtFecha(H.prox) : "—"], ["Observaciones", eq.observaciones, true]]);
+    P.titulo("5. Historial de inspecciones tecnológicas"); P.tabla(["Fecha", "Tipo de visita", "Estado general", "Malo / crítico", "Inspector"], H.ins.map((r) => [fmtFecha(r.fecha), r.tipoMantenimiento, r.estadoGeneral, String(r.hallazgos || 0), r.inspector]), [1.1, 2.4, 1.5, 1.1, 1.8]);
+    P.titulo("6. Solicitudes y órdenes de trabajo"); P.tabla(["Fecha", "Registro", "Detalle", "Estado o resultado"], H.sol.map((s) => [fmtFecha(s.fecha), "Solicitud " + s.numero, `${s.componente}: ${s.descripcion}`, s.estado]).concat(H.ord.map((o) => [fmtFecha(o.fin), "Orden de trabajo", o.trabajo, "Recibido: " + o.recibido])), [1.1, 2, 3.6, 1.5]);
+    P.firmas("7. Firmas", [["Responsable del equipo", eq.responsable], ["Docente líder TIC", ""], ["Vo. Bo. Rectoría", ""]]);
+    P.pie("Ficha de inventario " + eq.codigo + " · ENSMA Girardot");
+    descargarPDF("Ficha_inventario_" + String(eq.codigo).replace(/[^A-Za-z0-9_-]/g, "-") + ".pdf", doc.output("blob"), msg);
+  }
+
+  // ---------- acta de baja ----------
+  $("#t-bajas").addEventListener("click", (e) => { const b = e.target.closest("button[data-acta]"); if (!b) return; const r = BAJ.find((x) => x.id === b.dataset.acta); if (r) actaPDF(r, $("#f-baja .msg")); });
+  async function actaPDF(b, msg) {
+    if (!window.jspdf) { msg.className = "msg err"; msg.textContent = "No se pudo cargar el generador de PDF. Recargue la página."; return; }
+    msg.className = "msg"; msg.textContent = "Generando acta…";
+    const num = b.id || "";
+    const P = await nuevoPDF("Acta de baja de bienes N.° " + num, "Gestión Administrativa · Administración de la planta física y de los recursos");
+    const f = String(b.fecha || hoy()); const MES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    P.parrafo(`En Girardot, a los ${Number(f.slice(8, 10))} días del mes de ${MES.at(Number(f.slice(5, 7)) - 1)} de ${f.slice(0, 4)}, se deja constancia de la propuesta de baja del bien que se describe a continuación, con base en el concepto técnico emitido. La baja definitiva queda sujeta a la aprobación de la rectoría y al procedimiento de la Secretaría de Educación Municipal de Girardot.`);
+    P.y += 2;
+    P.titulo("1. Identificación del bien"); P.grilla([["Código de inventario", b.codigo], ["Infraestructura", b.infra], ["Fecha de la propuesta", fmtFecha(b.fecha)], ["Descripción del bien", b.descripcion, true]]);
+    P.titulo("2. Causa y concepto técnico"); P.grilla([["Causa de la baja", b.causa], ["Propuesto por", b.propuestoPor], ["Estado del trámite", b.estado || "Propuesta"], ["Concepto técnico", b.concepto, true]]);
+    P.titulo("3. Destino del bien"); P.grilla([["Destino propuesto", b.destino], ["Borrado seguro de datos", b.borrado], ["Observaciones", b.observaciones || "—"]]);
+    P.titulo("4. Decisión");
+    const { doc } = P; P.nueva(16); doc.setDrawColor(...P.GRIS); doc.setLineWidth(0.4);
+    [["Se aprueba la baja del bien", 0], ["No se aprueba la baja", 80]].forEach(([t, dx]) => { doc.rect(P.M + dx, P.y - 3.5, 4.5, 4.5); doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(...P.TINTA); doc.text(t, P.M + dx + 7, P.y); });
+    P.y += 8; doc.setFontSize(9); doc.setTextColor(...P.GRIS); doc.text("Observaciones de la decisión: ____________________________________________________________________________", P.M, P.y); P.y += 10;
+    P.firmas("5. Firmas", [["Propuesto por", b.propuestoPor], ["Concepto técnico (docente líder TIC o técnico)", ""], ["Pagador(a) / responsable de inventarios", ""], ["Rector(a) · Ordenador(a) del gasto", ""]]);
+    P.pie("Acta de baja " + num + " · ENSMA Girardot");
+    descargarPDF("Acta_baja_" + String(b.codigo || num).replace(/[^A-Za-z0-9_-]/g, "-") + ".pdf", doc.output("blob"), msg);
+  }
+
+  // ---------- sesión, contraseña y usuarios ----------
+  function modalClave({ titulo, pedirActual, alGuardar }) {
+    const m = document.createElement("div"); m.className = "modal";
+    m.innerHTML = `<form class="caja" novalidate><h3>${esc(titulo)}</h3>
+      ${pedirActual ? '<label>Contraseña actual<input type="password" id="mc-a" autocomplete="current-password"></label>' : ""}
+      <label>Nueva contraseña (mínimo 8 caracteres)<input type="password" id="mc-n" autocomplete="new-password"></label>
+      <label>Repita la nueva contraseña<input type="password" id="mc-n2" autocomplete="new-password"></label>
+      <label class="ver"><input type="checkbox" id="mc-ver"> Mostrar contraseñas</label>
+      <span class="msg" id="mc-msg" role="status"></span>
+      <div style="display:flex;gap:8px"><button class="btn" type="submit">Guardar</button><button class="btn sec" type="button" id="mc-x">Cancelar</button></div></form>`;
+    document.body.appendChild(m);
+    const cerrar = () => m.remove();
+    m.querySelector("#mc-x").addEventListener("click", cerrar);
+    m.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrar(); });
+    m.querySelector("#mc-ver").addEventListener("change", (e) => m.querySelectorAll("input[type=password], input[data-p]").forEach((i) => { i.dataset.p = "1"; i.type = e.target.checked ? "text" : "password"; }));
+    (m.querySelector("#mc-a") || m.querySelector("#mc-n")).focus();
+    m.querySelector("form").addEventListener("submit", async (ev) => {
+      ev.preventDefault(); const msg = m.querySelector("#mc-msg"); const n = m.querySelector("#mc-n").value, n2 = m.querySelector("#mc-n2").value;
+      if (n.length < 8) { msg.className = "msg err"; msg.textContent = "La contraseña debe tener al menos 8 caracteres."; return; }
+      if (n !== n2) { msg.className = "msg err"; msg.textContent = "Las contraseñas no coinciden."; return; }
+      try { await alGuardar(pedirActual ? m.querySelector("#mc-a").value : null, n); cerrar(); }
+      catch (e) { msg.className = "msg err"; msg.textContent = (e && e.message) || "No se pudo guardar."; }
+    });
+  }
+  function barraSesion() {
+    if (!SES) return; const cab = $(".top-in"); let b = $("#sesionbar");
+    if (!b) { b = document.createElement("div"); b.id = "sesionbar"; cab.appendChild(b); }
+    b.innerHTML = `<div class="quien"><b>${esc(SES.nombre)}</b>${esc(NOMBRE_ROL[SES.rol] || SES.rol)}${SES.modo === "local" ? '<br><span class="hint" style="color:var(--magenta)">Modo local (solo este navegador)</span>' : ""}</div><button class="btn sec" type="button" id="sb-clave">Cambiar contraseña</button><button class="btn" type="button" id="sb-salir">Cerrar sesión</button>`;
+    $("#sb-salir").addEventListener("click", () => SES.salir());
+    $("#sb-clave").addEventListener("click", () => modalClave({ titulo: "Cambiar mi contraseña", pedirActual: true, alGuardar: async (a, n) => { await SES.cambiarClave(a, n); const e = $("#estadoDb"); e.className = "banner ok"; e.style.display = ""; e.textContent = "Contraseña actualizada."; } }));
+  }
+  let USUARIOS = [];
+  async function cargarUsuarios() {
+    if (!SES || SES.rol !== "Rector") return;
+    try { USUARIOS = await SES.usuarios.listar(); renderUsuarios(); }
+    catch (e) { $("#u-msg").className = "msg err"; $("#u-msg").textContent = "No se pudo cargar la lista de usuarios."; }
+  }
+  function renderUsuarios() {
+    const tb = $("#t-usuarios tbody");
+    tb.innerHTML = USUARIOS.length ? USUARIOS.sort((a, b) => String(a.usuario).localeCompare(String(b.usuario))).map((u) => `<tr>
+      <td class="num"><b>${esc(u.usuario)}</b>${u.uid === SES.uid ? ' <span class="hint">(usted)</span>' : ""}</td><td>${esc(u.nombre)}</td><td>${esc(u.cargo)}</td>
+      <td><select data-urol="${esc(u.uid)}" aria-label="Rol de ${esc(u.usuario)}" ${u.uid === SES.uid ? "disabled" : ""}>${["Rector", "PM_PCO", "Docente"].map((r) => `<option value="${r}" ${u.rol === r ? "selected" : ""}>${esc(NOMBRE_ROL[r])}</option>`).join("")}</select></td>
+      <td>${u.activo ? '<span class="pill p3">Activo</span>' : '<span class="pill p4">Desactivado</span>'}</td>
+      <td style="white-space:nowrap">${u.uid === SES.uid ? "" : `<button class="btn sec" type="button" data-uact="${esc(u.uid)}">${u.activo ? "Desactivar" : "Activar"}</button> `}${SES.soportaRestablecer && u.uid !== SES.uid ? `<button class="btn sec" type="button" data-uclave="${esc(u.uid)}">Restablecer contraseña</button>` : ""}</td></tr>`).join("")
+      : '<tr><td colspan="6" class="empty">Sin usuarios.</td></tr>';
+  }
+  const uMsg = (t, ok) => { const m = $("#u-msg"); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = t; };
+  $("#t-usuarios").addEventListener("change", async (e) => {
+    const s = e.target.closest("select[data-urol]"); if (!s) return;
+    try { await SES.usuarios.actualizar(s.dataset.urol, { rol: s.value }); uMsg("Rol actualizado.", true); cargarUsuarios(); } catch (er) { uMsg(er.message || "No se pudo cambiar el rol.", false); cargarUsuarios(); }
+  });
+  $("#t-usuarios").addEventListener("click", async (e) => {
+    const a = e.target.closest("button[data-uact]"), c = e.target.closest("button[data-uclave]");
+    if (a) { const u = USUARIOS.find((x) => x.uid === a.dataset.uact); try { await SES.usuarios.actualizar(u.uid, { activo: !u.activo }); uMsg(u.activo ? "Usuario desactivado: ya no podrá ingresar." : "Usuario activado.", true); cargarUsuarios(); } catch (er) { uMsg(er.message, false); } }
+    if (c) { const u = USUARIOS.find((x) => x.uid === c.dataset.uclave); modalClave({ titulo: "Restablecer contraseña de " + u.usuario, pedirActual: false, alGuardar: async (_, n) => { await SES.usuarios.restablecerClave(u.uid, n); uMsg("Contraseña restablecida. Entréguela a " + u.nombre + ".", true); } }); }
+  });
+  $("#u-ver").addEventListener("change", (e) => { $("#u-clave").type = $("#u-clave2").type = e.target.checked ? "text" : "password"; });
+  $("#f-usuario").addEventListener("submit", async (ev) => {
+    ev.preventDefault(); const f = ev.target; const falta = validar(f);
+    if (falta) { aviso(f, "Falta: " + etiqueta(falta).replace(" *", ""), false); falta.focus(); return; }
+    if ($("#u-clave").value.length < 8) { aviso(f, "La contraseña debe tener al menos 8 caracteres.", false); return; }
+    if ($("#u-clave").value !== $("#u-clave2").value) { aviso(f, "Las contraseñas no coinciden.", false); return; }
+    if (!SES) return;
+    const btn = $("button[type=submit]", f); btn.disabled = true;
+    try {
+      const u = await SES.usuarios.crear({ usuario: $("#u-usuario").value.trim().toLowerCase(), nombre: $("#u-nombre").value.trim(), cargo: $("#u-cargo").value.trim(), rol: $("#u-rol").value, clave: $("#u-clave").value });
+      f.reset(); aviso(f, `Usuario ${u.usuario} creado con rol ${NOMBRE_ROL[u.rol]}. Entréguele su usuario y contraseña inicial.`, true); cargarUsuarios();
+    } catch (e) { aviso(f, e.message || "No se pudo crear el usuario.", false); } finally { btn.disabled = false; }
+  });
+
   function todo() { tiles(); renderOpt(); renderSol(); renderOpcSol(); renderEq(); renderOtros(); renderOpcInf(); if ($("#inf-sel").value) renderInforme(false); }
   todo();
 
   // ---------- conexión ----------
   (async () => {
     let listo = false;
+    SES = !(window.claude && window.claude.use) ? null : window.PORTAL_CONFIG ? await window.claude.use("sesion").catch(() => null) : await Promise.race([window.claude.use("sesion"), new Promise((r) => setTimeout(() => r(null), 3000))]).catch(() => null);
+    ROL = SES ? SES.rol : null; aplicarRol(); barraSesion();
     const timer = setTimeout(() => { if (!listo) bloquear("No se pudo conectar con la base de registros todavía. Los formularios se pueden llenar, pero no se guardarán hasta que haya conexión."); }, 10000);
     db = await (window.claude && window.claude.use ? window.claude.use("db") : Promise.resolve(null));
     const user = await (window.claude && window.claude.use ? window.claude.use("user") : Promise.resolve(null));
@@ -1297,9 +1562,9 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     sub("equipos", "creado", (v) => (EQ = v));
     sub("ordenes", "creado", (v) => (ORD = v));
     sub("inspecciones", "creado", (v) => (INS = v));
-    sub("bajas", "creado", (v) => (BAJ = v));
+    if (permitido("baja")) sub("bajas", "creado", (v) => (BAJ = v));
     sub("optimizaciones", "creado", (v) => (OPT = v));
-    db.doc("config/informes").onSnapshot((d) => { CFG = d.exists ? d.data() : {}; if (document.activeElement && document.activeElement.closest("#f-config")) return; $("#c-nombre").value = CFG.nombre || ""; $("#c-cargo").value = CFG.cargo || ""; $("#c-correo").value = CFG.correo || ""; }, () => {});
+    if (permitido("informes")) db.doc("config/informes").onSnapshot((d) => { CFG = d.exists ? d.data() : {}; if (document.activeElement && document.activeElement.closest("#f-config")) return; $("#c-nombre").value = CFG.nombre || ""; $("#c-cargo").value = CFG.cargo || ""; $("#c-correo").value = CFG.correo || ""; }, () => {});
   })();
 })();
 </script>

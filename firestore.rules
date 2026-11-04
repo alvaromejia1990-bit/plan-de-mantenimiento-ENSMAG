@@ -1,28 +1,65 @@
 rules_version = '2';
 
-// Reglas de seguridad de Cloud Firestore para el Portal de Mantenimiento ENSMA.
-// Solo las cuentas de Google del dominio institucional pueden leer y escribir.
-// Reemplace TU-DOMINIO.edu.co por el dominio real del correo institucional
-// (escriba los puntos como [.] , por ejemplo: ensmagirardot[.]edu[.]co).
+// Reglas de seguridad de Cloud Firestore · Portal de Mantenimiento ENSMA
+// Roles (colección "usuarios", un documento por cuenta):
+//   Rector  → administrador: todo el portal y la gestión de usuarios
+//   PM_PCO  → comité: todo excepto orden de trabajo y acta de baja de bienes
+//   Docente → inicio (tablero), solicitud de mantenimiento y solicitud de optimización
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function institucional() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email.matches('.*@TU-DOMINIO[.]edu[.]co$');
+    function autenticado() { return request.auth != null; }
+    function perfil() { return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data; }
+    function activo() {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && perfil().activo == true;
+    }
+    function rector()  { return activo() && perfil().rol == 'Rector'; }
+    function comite()  { return activo() && (perfil().rol == 'PM_PCO' || perfil().rol == 'Rector'); }
+    function usuario() { return activo(); }
+
+    // Cuentas y roles
+    match /usuarios/{uid} {
+      allow read: if rector() || (autenticado() && request.auth.uid == uid);
+      allow update, delete: if rector();
+      // El Rector crea cuentas; la primera cuenta (Rector) se crea una sola vez junto con config/instalacion
+      allow create: if rector()
+        || (autenticado() && request.auth.uid == uid
+            && request.resource.data.rol == 'Rector'
+            && !exists(/databases/$(database)/documents/config/instalacion)
+            && existsAfter(/databases/$(database)/documents/config/instalacion));
     }
 
-    // Formatos y registros del plan de mantenimiento
-    match /solicitudes/{id}  { allow read, write: if institucional(); }
-    match /inspecciones/{id} { allow read, write: if institucional(); }
-    match /equipos/{id}      { allow read, write: if institucional(); }
-    match /ordenes/{id}      { allow read, write: if institucional(); }
-    match /bajas/{id}        { allow read, write: if institucional(); }
-    match /optimizaciones/{id} { allow read, write: if institucional(); }
+    // Configuración
+    match /config/instalacion {
+      allow read: if autenticado();
+      allow create: if autenticado()
+        && !exists(/databases/$(database)/documents/config/instalacion)
+        && existsAfter(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+      allow update, delete: if false;
+    }
+    match /config/informes { allow read, write: if comite(); }
 
-    // Destinatario de los informes (directivo encargado)
-    match /config/{id}       { allow read, write: if institucional(); }
+    // Formatos que diligencian todos los roles
+    match /solicitudes/{id} {
+      allow read, create: if usuario();
+      allow update, delete: if comite();
+    }
+    match /optimizaciones/{id} {
+      allow read, create: if usuario();
+      allow update, delete: if comite();
+    }
+
+    // Formatos del comité (los docentes solo leen para el tablero)
+    match /inspecciones/{id} { allow read: if usuario(); allow write: if comite(); }
+    match /equipos/{id}      { allow read: if usuario(); allow write: if comite(); }
+
+    // Solo Rector escribe órdenes de trabajo; todos leen para el tablero e informes
+    match /ordenes/{id}      { allow read: if usuario(); allow write: if rector(); }
+
+    // Acta de baja de bienes: solo Rector
+    match /bajas/{id}        { allow read, write: if rector(); }
 
     // Todo lo demás queda cerrado
     match /{document=**}     { allow read, write: if false; }
