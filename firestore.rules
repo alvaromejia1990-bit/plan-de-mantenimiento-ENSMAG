@@ -1,0 +1,29 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore para el Portal de Mantenimiento ENSMA.
+// Solo las cuentas de Google del dominio institucional pueden leer y escribir.
+// Reemplace TU-DOMINIO.edu.co por el dominio real del correo institucional
+// (escriba los puntos como [.] , por ejemplo: ensmagirardot[.]edu[.]co).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function institucional() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('.*@TU-DOMINIO[.]edu[.]co$');
+    }
+
+    // Formatos y registros del plan de mantenimiento
+    match /solicitudes/{id}  { allow read, write: if institucional(); }
+    match /inspecciones/{id} { allow read, write: if institucional(); }
+    match /equipos/{id}      { allow read, write: if institucional(); }
+    match /ordenes/{id}      { allow read, write: if institucional(); }
+    match /bajas/{id}        { allow read, write: if institucional(); }
+
+    // Destinatario de los informes (directivo encargado)
+    match /config/{id}       { allow read, write: if institucional(); }
+
+    // Todo lo demás queda cerrado
+    match /{document=**}     { allow read, write: if false; }
+  }
+}
