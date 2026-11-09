@@ -25,8 +25,9 @@ Tiempo estimado: 15 minutos. Se necesita una cuenta de Google; se recomienda una
 1. En la barra superior del editor, en el selector de funciones, elija **`prepararHoja`** y pulse **Ejecutar**.
 2. Aparece **Se requiere autorización** → **Revisar permisos** → elija la cuenta.
 3. Si aparece "Google no verificó esta app": **Configuración avanzada → Ir a Portal Mantenimiento ENSMA (no seguro)**. Es normal: la app es suya y no está publicada para otros.
-4. Pulse **Permitir**. El script pide acceso a esta hoja de cálculo y a Google Drive (para las fotos).
+4. Pulse **Permitir**. El script pide acceso a esta hoja de cálculo, a Google Drive (para las fotos) y a **enviar correos en su nombre** (bienvenida a usuarios nuevos y aviso al Rector).
 5. Vuelva a la hoja: aparecen las pestañas `usuarios`, `solicitudes`, `inspecciones`, `equipos`, `ordenes`, `bajas`, `optimizaciones` y `config`, y en Drive se crea la carpeta **Portal Mantenimiento ENSMA - Fotos**.
+6. Elija ahora la función **`probarCorreo`** y pulse **Ejecutar**: le llega un correo de prueba con el diseño institucional. Si no llega, revise la carpeta de spam.
 
 ## Paso 4. Publicar como aplicación web
 
@@ -57,8 +58,8 @@ Guarde con **Commit changes** y espere 1 o 2 minutos a que GitHub Pages se actua
 
 ## Paso 6. Primer ingreso
 
-1. Abra el portal. Aparece **Configuración inicial: cuenta del Rector**. Créela (solo se puede una vez).
-2. Con esa cuenta, en **Usuarios y roles**, cree las cuentas del comité (PM_PCO) y de los docentes.
+1. Abra el portal. Aparece **Configuración inicial: cuenta del Rector**. Use el **correo institucional** del Rector como usuario (a ese correo llegarán los avisos de solicitudes verificadas). Solo se puede crear una vez.
+2. Con esa cuenta, en **Usuarios y roles**, cree las cuentas del comité (PM_PCO) y de los docentes, una a una o con la **carga masiva** (descargue la plantilla CSV, llénela en Excel y péguela o cárguela). Cada persona recibe su correo de bienvenida.
 3. Compruebe en la hoja que aparecen las filas en `usuarios` y, al enviar un formato, en la pestaña correspondiente.
 
 ---
@@ -72,7 +73,14 @@ Guarde con **Commit changes** y espere 1 o 2 minutos a que GitHub Pages se actua
 
 ## Actualizar el código del script más adelante
 
-Si se cambia `Code.gs`: pegue el código nuevo, guarde y vaya a **Implementar → Gestionar implementaciones → lápiz (Editar) → Versión: Nueva versión → Implementar**. Así la URL `/exec` no cambia y no hay que tocar `js/config.js`.
+Si se cambia `Code.gs` o `appsscript.json`: pegue el código nuevo, guarde, ejecute `probarCorreo` si pide nuevos permisos y vaya a **Implementar → Gestionar implementaciones → lápiz (Editar) → Versión: Nueva versión → Implementar**. Así la URL `/exec` no cambia y no hay que tocar `js/config.js`.
+
+## Correos que envía el portal
+
+- **Bienvenida**: a cada usuario nuevo, con su usuario, contraseña inicial y rol.
+- **Solicitud verificada**: a todos los Rectores activos, cuando el comité verifica una solicitud.
+- Los correos salen de la cuenta de Google que implementó el script. Límite diario de Gmail: unos **100 destinatarios** con cuenta gratuita y **1.500** con Google Workspace. Para cargas masivas grandes, divídalas en varios días o use una cuenta de Workspace.
+- La constante `URL_PORTAL` al inicio de `Code.gs` debe ser la dirección de su portal en GitHub Pages: de ahí toma el escudo y el botón "Ingresar al portal".
 
 ## Recomendaciones
 

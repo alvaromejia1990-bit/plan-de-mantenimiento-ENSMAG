@@ -18,15 +18,26 @@ Formatos en línea y tablero de seguimiento del **Plan de mantenimiento preventi
 
 ## Acceso por usuario, contraseña y rol
 
-Cada vez que se abre la dirección del portal se pide **usuario, contraseña y rol**, con la opción "Mostrar contraseña". El rol elegido debe coincidir con el que rectoría asignó a la cuenta; si no coincide, el portal no deja entrar. La sesión se cierra al cerrar la pestaña o el navegador. La primera vez que se abre aparece **Configuración inicial: cuenta del Rector**; esa cuenta se crea una sola vez.
+Cada vez que se abre la dirección del portal se pide **correo electrónico, contraseña y rol**, con la opción "Mostrar contraseña". El rol elegido debe coincidir con el que rectoría asignó a la cuenta; si no coincide, el portal no deja entrar. La sesión se cierra al cerrar la pestaña o el navegador. La primera vez que se abre aparece **Configuración inicial: cuenta del Rector**; esa cuenta se crea una sola vez.
 
 | Rol | Qué puede hacer |
 | --- | --- |
-| **Rector** (administrador) | Todo el portal. Crea usuarios, cambia roles, activa o desactiva cuentas (menú **Usuarios y roles**) |
-| **PM_PCO** (comité) | Todo, excepto **Orden de trabajo y recibo** y **Acta de baja de bienes** |
+| **Rector** (administrador) | Todo el portal. Crea usuarios (uno a uno o carga masiva), cambia roles, activa o desactiva cuentas (menú **Usuarios y roles**). Aprueba y asigna en **Orden de trabajo** y recibe en **Orden de recibo** |
+| **PM_PCO** (comité) | Todo, excepto **Orden de trabajo**, **Orden de recibo** y **Acta de baja de bienes**. Verifica las solicitudes en **Registro consolidado** |
 | **Docente** | **Inicio** (tablero), **Solicitud de mantenimiento** y **Solicitud de optimización** |
 
 Cada persona puede cambiar su propia contraseña con el botón **Cambiar contraseña** del encabezado. Todo lo que se diligencia en los formularios queda guardado: solicitudes, inspecciones, hojas de vida, órdenes, bajas y solicitudes de optimización.
+
+**Usuarios por correo y carga masiva**
+
+El usuario de acceso es el correo electrónico institucional. En **Usuarios y roles** el Rector puede crear una cuenta individual o pegar una lista (o cargar un CSV) con las columnas `Nombre completo; Correo; Cargo; Rol`. Todas reciben la **contraseña inicial genérica** que se indique, y el portal obliga a cambiarla en el primer ingreso. Con la conexión a Google, cada persona recibe un **correo de bienvenida** con diseño institucional (escudo y colores), su usuario y su contraseña inicial.
+
+**Flujo de una solicitud de mantenimiento**
+
+1. Cualquier usuario envía la **Solicitud de mantenimiento** con fotografía → queda en **Registro consolidado** como *Recibida*.
+2. El comité (PM_PCO) pulsa **Verificar y reportar**: fecha, prioridad, diagnóstico, recomendación y costo estimado → *Verificada por el comité*. El Rector recibe un **correo** con el detalle de la solicitud, la foto y la verificación.
+3. El Rector, en **Orden de trabajo**, revisa la solicitud y decide: aprobar, escalar a la Secretaría de Educación o no aprobar. Al aprobar con responsable, presupuesto y fuente asignados, la orden pasa a *En ejecución*; si falta alguno, queda *Aprobada por rectoría* hasta completarla.
+4. Terminado el trabajo, en **Orden de recibo** se registra la entrega con **fotografías obligatorias** (1 a 3). Si se recibe a satisfacción, la orden y la solicitud quedan *Cerradas*.
 
 **Documentos en PDF**
 

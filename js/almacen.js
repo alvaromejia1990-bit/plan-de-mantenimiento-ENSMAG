@@ -14,7 +14,8 @@
   const ROLES = ["Rector", "PM_PCO", "Docente"];
   const NOMBRE_ROL = { Rector: "Rector (administrador)", PM_PCO: "PM_PCO (comité)", Docente: "Docente" };
   const errorRol = (rol) => errorCon("invalid_argument", `Su cuenta no tiene el rol ${NOMBRE_ROL[rol] || rol}. Elija el rol que le asignó rectoría.`);
-  const okUsuario = (u) => /^[a-z0-9._-]{3,40}$/.test(u);
+  const esCorreo = (u) => /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(u || "");
+  const okUsuario = (u) => esCorreo(u) || /^[a-z0-9._-]{3,40}$/.test(u || "");
   const errorCon = (codigo, msg) => { const e = new Error(msg); e.code = codigo; return e; };
 
   // ------------------------------------------------------------------
@@ -47,7 +48,7 @@
       #login h2{font-family:var(--display,Arial);font-size:18px;color:var(--azul,#1d4f8c);margin:0 0 4px}
       #login p{margin:0 0 14px;color:var(--tenue,#5a6475);font-size:13.5px}
       #login form{display:grid;gap:12px}
-      #login select,#login input[type=text],#login input[type=password]{width:100%;padding:9px 11px;border:1.5px solid var(--campo-borde,#8ea7cb);border-radius:8px;background:var(--campo,#eef4fc);font:inherit}
+      #login select,#login input[type=text],#login input[type=email],#login input[type=password]{width:100%;padding:9px 11px;border:1.5px solid var(--campo-borde,#8ea7cb);border-radius:8px;background:var(--campo,#eef4fc);font:inherit}
       #login label{display:grid;gap:5px;font-size:13.5px;font-weight:600}
       #login .ver{display:flex;gap:8px;align-items:center;font-weight:500;font-size:13px}
       #login .ver input{width:16px;height:16px;accent-color:var(--azul,#1d4f8c)}
@@ -67,8 +68,8 @@
     return new Promise((resolver) => {
       const vistaIngreso = () => {
         div.innerHTML = `<div class="caja"><div class="enc"><img src="${escudo}" alt="Escudo institucional"><div><div class="ie">Escuela Normal Superior María Auxiliadora</div><h1>Portal de mantenimiento</h1></div></div>
-          <form id="lg-f" novalidate><h2>Ingresar</h2><p>Escriba el usuario y la contraseña que le asignó rectoría y elija su rol.</p>
-          <label for="lg-u">Usuario<input type="text" id="lg-u" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+          <form id="lg-f" novalidate><h2>Ingresar</h2><p>Escriba su correo electrónico, la contraseña y elija su rol.</p>
+          <label for="lg-u">Correo electrónico<input type="email" id="lg-u" autocomplete="username" autocapitalize="none" spellcheck="false" required placeholder="nombre@dominio.edu.co"></label>
           ${campoClave("lg-p", "Contraseña", "current-password")}
           <label class="ver"><input type="checkbox" id="lg-ver"> Mostrar contraseña</label>
           <label for="lg-r">Rol<select id="lg-r" required><option value="">Seleccione su rol…</option><option value="Rector">Rector (administrador)</option><option value="PM_PCO">PM_PCO (comité de mantenimiento)</option><option value="Docente">Docente</option></select></label>
@@ -93,7 +94,7 @@
         div.innerHTML = `<div class="caja"><div class="enc"><img src="${escudo}" alt="Escudo institucional"><div><div class="ie">Configuración inicial</div><h1>Cuenta del Rector</h1></div></div>
           <form id="in-f" novalidate><p>Esta cuenta administra el portal y crea los usuarios del comité y de los docentes. Solo se puede crear una vez.</p>
           <label for="in-n">Nombre completo<input type="text" id="in-n" required></label>
-          <label for="in-u">Usuario<input type="text" id="in-u" autocapitalize="none" spellcheck="false" required placeholder="Ej.: rector"></label>
+          <label for="in-u">Correo electrónico (será su usuario)<input type="email" id="in-u" autocapitalize="none" spellcheck="false" required placeholder="rectoria@dominio.edu.co"></label>
           ${campoClave("in-p", "Contraseña (mínimo 8 caracteres)", "new-password")}
           ${campoClave("in-p2", "Repita la contraseña", "new-password")}
           <label class="ver"><input type="checkbox" id="in-ver"> Mostrar contraseña</label>
@@ -107,7 +108,7 @@
           ev.preventDefault(); const err = div.querySelector("#in-err"); const btn = div.querySelector("#in-btn");
           const n = div.querySelector("#in-n").value.trim(), u = div.querySelector("#in-u").value.trim().toLowerCase(), p = div.querySelector("#in-p").value, p2 = div.querySelector("#in-p2").value;
           if (!n) { err.textContent = "Escriba el nombre completo."; return; }
-          if (!okUsuario(u)) { err.textContent = "El usuario debe tener de 3 a 40 caracteres: letras sin tilde, números, punto, guion o guion bajo."; return; }
+          if (!esCorreo(u)) { err.textContent = "Escriba un correo electrónico válido."; return; }
           if (p.length < 8) { err.textContent = "La contraseña debe tener al menos 8 caracteres."; return; }
           if (p !== p2) { err.textContent = "Las contraseñas no coinciden."; return; }
           btn.disabled = true; err.textContent = "";
@@ -169,31 +170,33 @@
     const UKEY = KEY + ":usuarios", SKEY = KEY + ":sesion";
     const leerU = () => { try { return JSON.parse(localStorage.getItem(UKEY) || "{}"); } catch (_) { return {}; } };
     const guardarU = (u) => localStorage.setItem(UKEY, JSON.stringify(u));
-    const publico = (id, u) => ({ uid: id, usuario: u.usuario, nombre: u.nombre, cargo: u.cargo || "", rol: u.rol, activo: u.activo !== false, creado: u.creado });
+    const publico = (id, u) => ({ uid: id, usuario: u.usuario, nombre: u.nombre, cargo: u.cargo || "", rol: u.rol, activo: u.activo !== false, creado: u.creado, correo: esCorreo(u.usuario) ? u.usuario : "", debeCambiar: !!u.debeCambiar });
     async function crearInterno({ usuario, nombre, cargo, rol, clave }) {
       const us = leerU();
-      if (!okUsuario(usuario)) throw errorCon("invalid_argument", "Usuario no válido: use de 3 a 40 letras sin tilde, números, punto o guion.");
-      if (Object.values(us).some((x) => x.usuario === usuario)) throw errorCon("invalid_argument", "Ese usuario ya existe.");
+      if (!okUsuario(usuario)) throw errorCon("invalid_argument", "Correo no válido: " + (usuario || "(vacío)") + ".");
+      if (Object.values(us).some((x) => x.usuario === usuario)) throw errorCon("invalid_argument", "Ya existe un usuario con el correo " + usuario + ".");
       if (!ROLES.includes(rol)) throw errorCon("invalid_argument", "Rol no válido.");
       if (!clave || clave.length < 8) throw errorCon("invalid_argument", "La contraseña debe tener al menos 8 caracteres.");
       const sal = Math.random().toString(36).slice(2, 12); const id = "u-" + Math.random().toString(36).slice(2, 10);
-      us[id] = { usuario, nombre, cargo: cargo || "", rol, activo: true, sal, hash: await sha256(sal + clave), creado: new Date().toISOString() };
+      us[id] = { usuario, nombre, cargo: cargo || "", rol, activo: true, sal, hash: await sha256(sal + clave), creado: new Date().toISOString(), debeCambiar: arguments[0].debeCambiar !== false };
       guardarU(us); return publico(id, us[id]);
     }
     function sesionDe(id) {
       const u = leerU()[id];
       const s = {
-        uid: id, usuario: u.usuario, nombre: u.nombre, cargo: u.cargo || "", rol: u.rol, modo: "local", soportaRestablecer: true,
+        uid: id, usuario: u.usuario, nombre: u.nombre, cargo: u.cargo || "", rol: u.rol, modo: "local", soportaRestablecer: true, debeCambiar: !!u.debeCambiar, puedeNotificar: false,
         async salir() { sessionStorage.removeItem(SKEY); location.reload(); },
         async cambiarClave(actual, nueva) {
           const us = leerU(); const yo = us[id];
           if ((await sha256(yo.sal + actual)) !== yo.hash) throw errorCon("invalid_argument", "La contraseña actual no es correcta.");
           if (!nueva || nueva.length < 8) throw errorCon("invalid_argument", "La nueva contraseña debe tener al menos 8 caracteres.");
-          yo.hash = await sha256(yo.sal + nueva); guardarU(us);
+          if (actual === nueva) throw errorCon("invalid_argument", "La nueva contraseña debe ser distinta de la actual.");
+          yo.hash = await sha256(yo.sal + nueva); yo.debeCambiar = false; guardarU(us); s.debeCambiar = false;
         },
         usuarios: {
           async listar() { const us = leerU(); return Object.entries(us).map(([k, v]) => publico(k, v)); },
-          async crear(d) { if (s.rol !== "Rector") throw errorCon("invalid_argument", "Solo el Rector crea usuarios."); return crearInterno(d); },
+          async crear(d) { if (s.rol !== "Rector") throw errorCon("invalid_argument", "Solo el Rector crea usuarios."); return { usuario: await crearInterno(d), correo: "" }; },
+          async crearLote(lista, notificar) { const out = []; for (const d of lista) { try { out.push(Object.assign({ correo: d.usuario, ok: true }, await s.usuarios.crear(d, notificar))); } catch (e) { out.push({ correo: d.usuario, ok: false, mensaje: e.message }); } } return out; },
           async actualizar(uid, cambios) {
             if (s.rol !== "Rector") throw errorCon("invalid_argument", "Solo el Rector modifica usuarios.");
             const us = leerU(); if (!us[uid]) throw errorCon("invalid_argument", "El usuario no existe.");
@@ -203,7 +206,7 @@
           async restablecerClave(uid, nueva) {
             if (s.rol !== "Rector") throw errorCon("invalid_argument", "Solo el Rector restablece contraseñas.");
             if (!nueva || nueva.length < 8) throw errorCon("invalid_argument", "La contraseña debe tener al menos 8 caracteres.");
-            const us = leerU(); us[uid].hash = await sha256(us[uid].sal + nueva); guardarU(us);
+            const us = leerU(); us[uid].hash = await sha256(us[uid].sal + nueva); us[uid].debeCambiar = true; guardarU(us);
           },
         },
       };
@@ -223,7 +226,7 @@
           if (par[1].rol !== rol) throw errorRol(rol);
           sessionStorage.setItem(SKEY, par[0]); return sesionDe(par[0]);
         } : null,
-        instalar: hay ? null : async ({ nombre, usuario, clave }) => { const u = await crearInterno({ usuario, nombre, cargo: "Rector(a)", rol: "Rector", clave }); sessionStorage.setItem(SKEY, u.uid); return sesionDe(u.uid); },
+        instalar: hay ? null : async ({ nombre, usuario, clave }) => { const u = await crearInterno({ usuario, nombre, cargo: "Rector(a)", rol: "Rector", clave, debeCambiar: false }); sessionStorage.setItem(SKEY, u.uid); return sesionDe(u.uid); },
       });
     }
     return { iniciarSesion, db };
@@ -257,7 +260,7 @@
       doc: (ruta) => envRef(fs.doc(ruta)),
     };
   }
-  const correoDe = (u) => `${u}@${DOMINIO_USUARIOS}`;
+  const correoDe = (u) => (esCorreo(u) ? u : `${u}@${DOMINIO_USUARIOS}`);
   const mensajeAuth = (e) => {
     const c = (e && e.code) || "";
     if (c.includes("invalid-credential") || c.includes("wrong-password") || c.includes("user-not-found") || c.includes("invalid-email")) return "Usuario o contraseña incorrectos.";
@@ -282,7 +285,7 @@
     }
     function sesionDe(user, p) {
       const s = {
-        uid: user.uid, usuario: p.usuario, nombre: p.nombre, cargo: p.cargo || "", rol: p.rol, modo: "firebase", soportaRestablecer: false,
+        uid: user.uid, usuario: p.usuario, nombre: p.nombre, cargo: p.cargo || "", rol: p.rol, modo: "firebase", soportaRestablecer: false, debeCambiar: false, puedeNotificar: false,
         async salir() { await auth.signOut(); location.reload(); },
         async cambiarClave(actual, nueva) {
           if (!nueva || nueva.length < 8) throw errorCon("invalid_argument", "La nueva contraseña debe tener al menos 8 caracteres.");
@@ -292,7 +295,7 @@
         usuarios: {
           async listar() { const q = await fs.collection("usuarios").get(); return q.docs.map((d) => Object.assign({ uid: d.id }, d.data(), { activo: d.data().activo !== false })); },
           async crear({ usuario, nombre, cargo, rol, clave }) {
-            if (!okUsuario(usuario)) throw errorCon("invalid_argument", "Usuario no válido: use de 3 a 40 letras sin tilde, números, punto o guion.");
+            if (!okUsuario(usuario)) throw errorCon("invalid_argument", "Correo no válido: " + (usuario || "(vacío)") + ".");
             if (!ROLES.includes(rol)) throw errorCon("invalid_argument", "Rol no válido.");
             const sec = window.firebase.apps.find((a) => a.name === "alta") || window.firebase.initializeApp(CFG.firebase, "alta");
             let nuevo;
@@ -301,8 +304,9 @@
             const uid = nuevo.user.uid; await sec.auth().signOut();
             try { await fs.collection("usuarios").doc(uid).set({ usuario, nombre, cargo: cargo || "", rol, activo: true, creado: new Date().toISOString(), creadoPor: user.uid }); }
             catch (e) { throw mapaError(e); }
-            return { uid, usuario, nombre, cargo, rol, activo: true };
+            return { usuario: { uid, usuario, nombre, cargo, rol, activo: true }, correo: "" };
           },
+          async crearLote(lista) { const out = []; for (const d of lista) { try { out.push(Object.assign({ correo: d.usuario, ok: true }, await s.usuarios.crear(d))); } catch (e) { out.push({ correo: d.usuario, ok: false, mensaje: e.message }); } } return out; },
           async actualizar(uid, cambios) {
             if (uid === user.uid && (cambios.rol && cambios.rol !== "Rector" || cambios.activo === false)) throw errorCon("invalid_argument", "No puede quitarse a sí mismo el rol de Rector ni desactivar su propia cuenta.");
             const c = {}; ["rol", "activo", "nombre", "cargo"].forEach((k) => { if (k in cambios) c[k] = cambios[k]; });
@@ -404,6 +408,7 @@
     }
     async function escribir(c, id, datos, modo) {
       const r = await api("escribir", { col: c, id, datos, modo });
+      if (r.correo) window.dispatchEvent(new CustomEvent("portal-correo", { detail: r.correo }));
       (crudo[c] = crudo[c] || {})[id] = r.doc;
       Object.keys(datos).forEach((k) => { const v = datos[k]; const r2 = r.doc[k]; if (typeof v === "string" && v.indexOf("data:image") === 0 && typeof r2 === "string") fotos[r2.slice(6)] = v; if (Array.isArray(v) && Array.isArray(r2)) v.forEach((x, i) => { if (typeof x === "string" && x.indexOf("data:image") === 0 && typeof r2[i] === "string") fotos[r2[i].slice(6)] = x; }); });
       notificar(c); setTimeout(() => sincronizar(false), 300);
@@ -422,12 +427,13 @@
 
     function sesionDe(perfil) {
       const s = {
-        uid: perfil.uid, usuario: perfil.usuario, nombre: perfil.nombre, cargo: perfil.cargo || "", rol: perfil.rol, modo: "google", soportaRestablecer: true,
+        uid: perfil.uid, usuario: perfil.usuario, nombre: perfil.nombre, cargo: perfil.cargo || "", rol: perfil.rol, modo: "google", soportaRestablecer: true, debeCambiar: !!perfil.debeCambiar, puedeNotificar: true,
         async salir() { await api("salir").catch(() => {}); sessionStorage.removeItem(TKEY); location.reload(); },
-        async cambiarClave(actual, nueva) { await api("cambiarClave", { actual, nueva }); },
+        async cambiarClave(actual, nueva) { await api("cambiarClave", { actual, nueva }); s.debeCambiar = false; },
         usuarios: {
           async listar() { return (await api("usuarios_listar")).usuarios; },
-          async crear(d) { return (await api("usuarios_crear", { datos: d })).usuario; },
+          async crear(d, notificar) { const r = await api("usuarios_crear", { datos: d, notificar: notificar !== false }); return { usuario: r.usuario, correo: r.correo || "" }; },
+          async crearLote(lista, notificar) { return (await api("usuarios_crear_lote", { lista, notificar: notificar !== false })).resultados; },
           async actualizar(uid, cambios) { await api("usuarios_actualizar", { uid, cambios }); },
           async restablecerClave(uid, clave) { await api("usuarios_restablecer", { uid, clave }); },
         },
