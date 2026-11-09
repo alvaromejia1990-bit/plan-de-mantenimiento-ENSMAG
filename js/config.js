@@ -19,7 +19,7 @@ window.PORTAL_CONFIG = {
   modo: "google",
 
   // URL de la aplicación web de Google Apps Script (termina en /exec)
-  urlAppsScript: "",
+  urlAppsScript: "https://script.google.com/macros/s/AKfycbxviVXeeJiIE7b0b8YQk5Q_7f7yI37hyZ5bBck5Ie3VlzESmQciafsFm0xqNBoGCgSL5g/exec",
 
   firebase: {
     apiKey: "",
