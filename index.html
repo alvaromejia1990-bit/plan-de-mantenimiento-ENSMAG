@@ -104,6 +104,10 @@ table.chk input { width: 17px; height: 17px; accent-color: var(--azul); }
 table.chk { width: 100%; border-collapse: collapse; font-size: 14px; }
 table.chk th, table.chk td { border-bottom: 1px solid var(--borde); padding: 8px 6px; text-align: left; }
 table.chk td.opt { text-align: center; }
+table.chk td.hfoto { min-width: 210px; font-size: 13px; }
+table.chk td.hfoto input[type=file] { width: 100%; font-size: 13px; }
+table.chk td.hfoto img { display: block; max-height: 64px; max-width: 120px; border-radius: 6px; border: 1px solid var(--borde); margin-top: 4px; }
+table.chk tr.malo { background: #fdeef3 !important; }
 table.chk th.opt { text-align: center; font-size: 12.5px; }
 
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -329,7 +333,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     <!-- 2 INSPECCION -->
     <section class="view" id="v-inspeccion">
       <div class="head"><div><div class="code">Etapa 1: autoevaluación</div><h2>Ficha de inspección</h2>
-        <p class="lead">Elija el tipo de inspección. Los componentes calificados como Malo o Crítico generan una solicitud de mantenimiento automáticamente.</p></div></div>
+        <p class="lead">Elija el tipo de inspección. Cada componente calificado como Malo o Crítico exige su fotografía y genera automáticamente una solicitud de mantenimiento con esa foto.</p></div></div>
       <div class="tabs" role="tablist" aria-label="Tipo de inspección">
         <button type="button" role="tab" id="tab-fis" aria-selected="true" aria-controls="f-inspeccion">Inspección física</button>
         <button type="button" role="tab" id="tab-tec" aria-selected="false" aria-controls="f-insp-tec">Inspección tecnológica</button>
@@ -342,6 +346,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label><span class="req">Fecha de inspección</span><input type="date" id="i-fecha" required></label>
           <label><span class="req">Inspector(a)</span><span class="hint">Comité de mantenimiento, servicios generales o apoyo técnico.</span><input type="text" id="i-inspector" required></label>
           <label><span class="req">Sede</span><input type="text" id="i-sede" required></label>
+          <label><span class="req">Bloque</span><select id="i-bloque" required><option value="">Seleccione…</option><option value="A">Bloque A</option><option value="B">Bloque B</option><option value="C">Bloque C</option><option value="D">Bloque D</option><option value="E">Bloque E</option><option value="F">Bloque F</option><option value="G">Bloque G</option><option value="H">Bloque H</option><option value="I">Bloque I</option></select></label>
           <label><span class="req">Nombre del espacio</span><input type="text" id="i-espacio" required placeholder="Ej.: Laboratorio de ciencias, Aula 9B"></label>
           <label><span class="req">Tipo de espacio</span><select id="i-tipoesp" required><option value="">Seleccione…</option></select></label>
           <label><span>Capacidad (personas)</span><input type="number" id="i-cap" min="0"></label>
@@ -352,7 +357,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
             <label><input type="radio" name="i-visita" value="Verificación posterior a reparación"> Verificación posterior a reparación</label></div></fieldset>
 
           <p class="subt full">Estado de los componentes</p>
-          <div class="full tblwrap"><table class="chk" id="i-tabla"><thead><tr><th>Componente</th><th class="opt">Bueno</th><th class="opt">Regular</th><th class="opt">Malo</th><th class="opt">Crítico</th><th class="opt">No aplica</th></tr></thead><tbody><tr><td colspan="6" class="empty">Elija el tipo de espacio.</td></tr></tbody></table></div>
+          <div class="full tblwrap"><table class="chk" id="i-tabla"><thead><tr><th>Componente</th><th class="opt">Bueno</th><th class="opt">Regular</th><th class="opt">Malo</th><th class="opt">Crítico</th><th class="opt">No aplica</th><th>Registro fotográfico del hallazgo</th></tr></thead><tbody><tr><td colspan="7" class="empty">Elija el tipo de espacio.</td></tr></tbody></table></div>
 
           <p class="subt full">Mediciones (en funcionamiento / total)</p>
           <label><span>Luminarias</span><span style="display:flex;gap:8px"><input type="number" id="i-lum-ok" min="0" aria-label="Luminarias en funcionamiento" placeholder="Funcionan"><input type="number" id="i-lum-t" min="0" aria-label="Total de luminarias" placeholder="Total"></span></label>
@@ -360,11 +365,9 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label><span>Ventiladores o aires</span><span style="display:flex;gap:8px"><input type="number" id="i-ven-ok" min="0" aria-label="Ventiladores en funcionamiento" placeholder="Funcionan"><input type="number" id="i-ven-t" min="0" aria-label="Total de ventiladores" placeholder="Total"></span></label>
           <label><span>Mobiliario (pupitres, sillas, mesas)</span><span style="display:flex;gap:8px"><input type="number" id="i-mob-ok" min="0" aria-label="Mobiliario en buen estado" placeholder="Buen estado"><input type="number" id="i-mob-t" min="0" aria-label="Total de mobiliario" placeholder="Total"></span></label>
 
-          <p class="subt full">Actividades preventivas realizadas en esta visita</p>
-          <div class="full checks" id="i-acts"></div>
 
-          <p class="subt full">Registro fotográfico (opcional)</p>
-          <label class="full"><span>Fotos del espacio o de los hallazgos</span><span class="hint">Hasta 3 fotos; se reducen antes de guardarse.</span><input type="file" id="i-fotos" accept="image/*" multiple></label>
+          <p class="subt full">Registro fotográfico general del espacio (opcional)</p>
+          <label class="full"><span>Fotos generales del espacio</span><span class="hint">Hasta 3 fotos; se reducen antes de guardarse.</span><input type="file" id="i-fotos" accept="image/*" multiple></label>
           <div class="full fotos" id="i-prev"></div>
 
           <p class="subt full">Resultado</p>
@@ -384,6 +387,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label><span class="req">Fecha de inspección</span><input type="date" id="it-fecha" required></label>
           <label><span class="req">Inspector(a)</span><span class="hint">Docente líder TIC, técnico o proveedor.</span><input type="text" id="it-inspector" required></label>
           <label><span class="req">Sede</span><input type="text" id="it-sede" required></label>
+          <label><span class="req">Bloque</span><select id="it-bloque" required><option value="">Seleccione…</option><option value="A">Bloque A</option><option value="B">Bloque B</option><option value="C">Bloque C</option><option value="D">Bloque D</option><option value="E">Bloque E</option><option value="F">Bloque F</option><option value="G">Bloque G</option><option value="H">Bloque H</option><option value="I">Bloque I</option></select></label>
           <label><span class="req">Sala o ubicación</span><input type="text" id="it-ubic" required placeholder="Ej.: Sala de informática 1"></label>
           <label><span class="req">Código de inventario</span><span class="hint">Escriba el código o elija uno de los equipos registrados.</span><input type="text" id="it-codigo" list="it-codigos" required></label>
           <datalist id="it-codigos"></datalist>
@@ -394,7 +398,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
             <label><input type="radio" name="it-tipom" value="Verificación posterior a reparación"> Verificación posterior a reparación</label></div></fieldset>
 
           <p class="subt full">Estado de los componentes</p>
-          <div class="full tblwrap"><table class="chk" id="it-tabla"><thead><tr><th>Componente</th><th class="opt">Bueno</th><th class="opt">Regular</th><th class="opt">Malo</th><th class="opt">Crítico</th><th class="opt">No aplica</th></tr></thead><tbody></tbody></table></div>
+          <div class="full tblwrap"><table class="chk" id="it-tabla"><thead><tr><th>Componente</th><th class="opt">Bueno</th><th class="opt">Regular</th><th class="opt">Malo</th><th class="opt">Crítico</th><th class="opt">No aplica</th><th>Registro fotográfico del hallazgo</th></tr></thead><tbody></tbody></table></div>
 
           <p class="subt full">Mediciones</p>
           <label><span>Almacenamiento libre (%)</span><input type="number" id="it-disco" min="0" max="100"></label>
@@ -402,8 +406,6 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
           <label><span>Horas de uso de la lámpara (proyectores)</span><input type="number" id="it-lampara" min="0"></label>
           <label><span>Antigüedad del equipo (años)</span><input type="number" id="it-edad" min="0"></label>
 
-          <p class="subt full">Actividades preventivas realizadas en esta visita</p>
-          <div class="full checks" id="it-acts"></div>
 
           <p class="subt full">Resultado</p>
           <label><span class="req">Estado general del equipo</span><select id="it-estado" required><option value="">Seleccione…</option><option>Operativo</option><option>Operativo con fallas</option><option>En reparación</option><option>Para baja</option></select></label>
@@ -690,7 +692,6 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     "Tanques y cuarto de bombas": { obj: "Suministro continuo de agua potable a toda la sede.", comp: ["Limpieza y desinfección del tanque", "Tapas y seguridad del tanque", "Bombas y flotadores", "Tubería y válvulas"] },
   };
   const NO_APLICA_BASE = { "Zonas verdes y exteriores": ["Cubierta, canales y bajantes", "Ventilación (ventiladores o aire)", "Puertas, ventanas y cerraduras"], "Zona deportiva o recreativa": ["Ventilación (ventiladores o aire)"], "Tanques y cuarto de bombas": ["Ventilación (ventiladores o aire)", "Pintura y señalización"] };
-  const ACTS_FIS = ["Limpieza de canales y bajantes", "Revisión de tejas y sellos", "Inspección de fisuras y humedades", "Revisión de tableros, tomas y luminarias", "Limpieza de ventiladores o filtros", "Revisión de llaves, sanitarios y fugas", "Ajuste de mobiliario", "Lubricación de puertas y cerraduras", "Retoque de pintura o señalización", "Poda o fumigación", "Revisión de extintores y botiquín", "Lavado y desinfección de tanque"];
   let INSP = [];
   const AREAS = ["Preescolar", "Básica primaria", "Matemáticas", "Humanidades: lengua castellana", "Humanidades: inglés", "Ciencias naturales y educación ambiental", "Ciencias sociales", "Filosofía", "Ciencias económicas y políticas", "Educación artística y cultural", "Educación física, recreación y deportes", "Educación ética y en valores humanos", "Educación religiosa", "Tecnología e informática"];
   const INST_PFC = ["Coordinación del PFC", "Práctica pedagógica investigativa", "Investigación educativa", "Componente pedagógico y didáctico", "Componente disciplinar", "Bienestar del PFC"];
@@ -701,7 +702,6 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
   const EST_OPT = ["Recibida", "En priorización", "Aprobada en el PMI", "En ejecución", "Ejecutada", "No aprobada"];
   const CALIF = ["Bueno", "Regular", "Malo", "Crítico", "No aplica"];
   const INSP_TEC = ["Limpieza física interna y externa", "Ventiladores, temperatura y pasta térmica", "Encendido y rendimiento general", "Sistema operativo y actualizaciones", "Antivirus y programas no autorizados", "Licencias de software vigentes", "Conectividad de red o wifi", "Periféricos, cables y cargadores", "Batería (portátiles y tabletas)", "Pantalla, imagen o lámpara", "Protección eléctrica (UPS, regulador, polo a tierra)", "Respaldo de información", "Cuentas y accesos de usuario"];
-  const ACTS_TEC = ["Limpieza física interna y externa", "Cambio de pasta térmica", "Actualización del sistema operativo", "Actualización y análisis de antivirus", "Desinstalación de programas no autorizados", "Limpieza de filtros y lentes", "Cambio de consumibles", "Revisión de cableado y conectores", "Cambio de contraseñas de red", "Copia de seguridad realizada", "Prueba de restauración de copias", "Revisión de cuentas de usuario"];
 
   // ---------- navegación por hash ----------
   const VISTAS = ["inicio", "solicitud", "inspeccion", "hoja-vida", "orden-trabajo", "orden-recibo", "baja", "optimizacion", "registro", "informes", "usuarios"];
@@ -778,15 +778,37 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     img.src = url;
   });
 
+  // fotos obligatorias por hallazgo (componentes en Malo o Crítico)
+  const HF = { i: {}, t: {} };
+  function celdaFoto(td, malo) {
+    const k = td.dataset.hf, g = k[0], i = k.slice(1);
+    td.parentElement.classList.toggle("malo", malo);
+    if (!malo) { td.innerHTML = ""; delete HF[g][i]; return; }
+    if (td.querySelector("input")) return;
+    td.innerHTML = `<span class="req">Foto obligatoria</span><input type="file" accept="image/*" aria-label="Foto del hallazgo"><div class="hf-prev"></div>`;
+    td.querySelector("input").addEventListener("change", async (e) => {
+      const fl = e.target.files && e.target.files[0]; const pv = td.querySelector(".hf-prev"); delete HF[g][i]; pv.innerHTML = "";
+      if (!fl) return;
+      try { HF[g][i] = await reducir(fl, 640, 0.5); pv.innerHTML = `<img src="${HF[g][i]}" alt="Foto del hallazgo">`; } catch (_) { pv.innerHTML = '<span class="msg err">No se pudo leer la imagen.</span>'; }
+    });
+  }
+  ["#i-tabla", "#it-tabla"].forEach((t) => $(t).addEventListener("change", (e) => {
+    const r = e.target.closest("input[type=radio]"); if (!r) return;
+    const td = r.closest("tr").querySelector("td.hfoto"); if (td) celdaFoto(td, ["Malo", "Crítico"].includes(r.value));
+  }));
+  function faltaFotoHallazgo(g, lista, pref, f) {
+    const i = lista.findIndex((c, j) => { const r = $(`input[name=${pref}${j}]:checked`, f); return r && ["Malo", "Crítico"].includes(r.value) && !HF[g][j]; });
+    return i < 0 ? null : lista[i];
+  }
+
   // tabla de inspección física según el tipo de espacio
   $("#i-tipoesp").innerHTML += Object.keys(ESPACIOS).map((k) => `<option>${esc(k)}</option>`).join("");
-  $("#i-acts").innerHTML = ACTS_FIS.map((a, i) => `<label><input type="checkbox" id="i-a${i}" value="${esc(a)}"> ${esc(a)}</label>`).join("");
   function tablaFisica() {
     const t = $("#i-tipoesp").value, e = ESPACIOS[t];
-    if (!e) { INSP = []; $("#i-tabla tbody").innerHTML = '<tr><td colspan="6" class="empty">Elija el tipo de espacio.</td></tr>'; $("#i-objetivo").textContent = "Elija el tipo de espacio para ver su objetivo y los componentes que se revisan."; return; }
+    if (!e) { INSP = []; $("#i-tabla tbody").innerHTML = '<tr><td colspan="7" class="empty">Elija el tipo de espacio.</td></tr>'; $("#i-objetivo").textContent = "Elija el tipo de espacio para ver su objetivo y los componentes que se revisan."; return; }
     INSP = INSP_BASE.concat(e.comp); const na = NO_APLICA_BASE[t] || [];
     $("#i-objetivo").innerHTML = `<b>Objetivo del espacio:</b> ${esc(e.obj)}<br><span class="hint">${INSP.length} componentes: ${INSP_BASE.length} generales y ${e.comp.length} propios de este tipo de espacio.</span>`;
-    $("#i-tabla tbody").innerHTML = INSP.map((c, i) => `<tr><td>${e.comp.includes(c) ? "<b>" + esc(c) + "</b>" : esc(c)}</td>${CALIF.map((q) => `<td class="opt"><input type="radio" name="c${i}" value="${q}" aria-label="${esc(c)}: ${q}" ${na.includes(c) && q === "No aplica" ? "checked" : ""}></td>`).join("")}</tr>`).join("");
+    $("#i-tabla tbody").innerHTML = INSP.map((c, i) => `<tr><td>${e.comp.includes(c) ? "<b>" + esc(c) + "</b>" : esc(c)}</td>${CALIF.map((q) => `<td class="opt"><input type="radio" name="c${i}" value="${q}" aria-label="${esc(c)}: ${q}" ${na.includes(c) && q === "No aplica" ? "checked" : ""}></td>`).join("")}<td class="hfoto" data-hf="i${i}"></td></tr>`).join(""); HF.i = {};
   }
   $("#i-tipoesp").addEventListener("change", tablaFisica);
   let iFotos = [];
@@ -795,8 +817,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     try { for (const f of files) iFotos.push(await reducir(f, 640, 0.5)); $("#i-prev").innerHTML = iFotos.map((u, i) => `<figure><img src="${u}" alt="Foto ${i + 1} de la inspección"><figcaption>Foto ${i + 1}</figcaption></figure>`).join(""); }
     catch (_) { iFotos = []; $("#i-prev").innerHTML = '<p class="msg err">No se pudo leer una de las imágenes.</p>'; }
   });
-  $("#it-tabla tbody").innerHTML = INSP_TEC.map((c, i) => `<tr><td>${esc(c)}</td>${CALIF.map((q) => `<td class="opt"><input type="radio" name="t${i}" value="${q}" aria-label="${esc(c)}: ${q}"></td>`).join("")}</tr>`).join("");
-  $("#it-acts").innerHTML = ACTS_TEC.map((a, i) => `<label><input type="checkbox" id="it-a${i}" value="${esc(a)}"> ${esc(a)}</label>`).join("");
+  $("#it-tabla tbody").innerHTML = INSP_TEC.map((c, i) => `<tr><td>${esc(c)}</td>${CALIF.map((q) => `<td class="opt"><input type="radio" name="t${i}" value="${q}" aria-label="${esc(c)}: ${q}"></td>`).join("")}<td class="hfoto" data-hf="t${i}"></td></tr>`).join("");
   $("#it-fecha").value = hoy();
   function tabInsp(tec) {
     $("#tab-fis").setAttribute("aria-selected", String(!tec)); $("#tab-tec").setAttribute("aria-selected", String(tec));
@@ -935,26 +956,31 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     catch (err) { s.disabled = false; const e2 = $("#estadoDb"); e2.className = "banner warn"; e2.style.display = ""; e2.textContent = "No se pudo cambiar el estado. Verifique sus permisos e intente de nuevo."; }
   });
 
+  $("#f-inspeccion").addEventListener("reset", () => setTimeout(() => $$("#i-tabla td.hfoto").forEach((td) => celdaFoto(td, false)), 0));
+  $("#f-insp-tec").addEventListener("reset", () => setTimeout(() => $$("#it-tabla td.hfoto").forEach((td) => celdaFoto(td, false)), 0));
   // envío: inspección física
   $("#f-inspeccion").addEventListener("submit", async (ev) => {
     ev.preventDefault(); const f = ev.target; const falta = validar(f);
     if (falta) { aviso(f, "Falta: " + etiqueta(falta).replace(" *", ""), false); falta.focus(); return; }
     const sinCalif = INSP.find((c, i) => !$(`input[name=c${i}]:checked`, f));
     if (sinCalif) { aviso(f, "Falta calificar: " + sinCalif, false); return; }
+    const sinFotoF = faltaFotoHallazgo("i", INSP, "c", f);
+    if (sinFotoF) { aviso(f, "Falta la fotografía del hallazgo: " + sinFotoF, false); return; }
     if (!db) return;
     const num = (sel) => { const v = $(sel).value; return v === "" ? null : Number(v); };
-    const d = { tipo: "Física", fecha: $("#i-fecha").value, inspector: $("#i-inspector").value.trim(), sede: $("#i-sede").value.trim(), espacio: $("#i-espacio").value.trim(), tipoEspacio: $("#i-tipoesp").value, capacidad: num("#i-cap"), tipoVisita: $("input[name=i-visita]:checked", f).value, componentes: {},
+    const d = { tipo: "Física", fecha: $("#i-fecha").value, inspector: $("#i-inspector").value.trim(), sede: $("#i-sede").value.trim(), bloque: $("#i-bloque").value, espacio: $("#i-espacio").value.trim(), tipoEspacio: $("#i-tipoesp").value, capacidad: num("#i-cap"), tipoVisita: $("input[name=i-visita]:checked", f).value, componentes: {},
       mediciones: { luminarias: [num("#i-lum-ok"), num("#i-lum-t")], tomacorrientes: [num("#i-tom-ok"), num("#i-tom-t")], ventiladores: [num("#i-ven-ok"), num("#i-ven-t")], mobiliario: [num("#i-mob-ok"), num("#i-mob-t")] },
-      actividades: ACTS_FIS.filter((a, i) => $("#i-a" + i).checked), fotos: iFotos.slice(), estadoGeneral: $("#i-estado").value, apto: $("#i-apto").value, proximaRevision: $("#i-prox").value, observaciones: $("#i-obs").value.trim() };
+      fotos: iFotos.slice(), estadoGeneral: $("#i-estado").value, apto: $("#i-apto").value, proximaRevision: $("#i-prox").value, observaciones: $("#i-obs").value.trim() };
     INSP.forEach((c, i) => (d.componentes[c] = $(`input[name=c${i}]:checked`, f).value));
     const malos = INSP.filter((c) => ["Malo", "Crítico"].includes(d.componentes[c]));
-    d.hallazgos = malos.length;
+    const fotoDe = (c) => HF.i[INSP.indexOf(c)] || "";
+    d.hallazgos = malos.length; d.hallazgosComponentes = malos; d.fotosHallazgos = malos.map(fotoDe);
     const btn = $("[data-save]", f); btn.disabled = true;
     try {
       await guardar("inspecciones", nuevoId("INS"), d);
       for (const c of malos) {
         const id = nuevoId("SOL");
-        await guardar("solicitudes", id, { numero: id, fecha: d.fecha, nombre: d.inspector, rol: "Comité de mantenimiento (inspección)", sede: d.sede, infra: "Física", espacio: d.espacio, componente: c, descripcion: `Hallazgo de inspección (${d.tipoEspacio}): ${c} en estado ${d.componentes[c]}. ${d.observaciones}`.trim(), riesgo: d.componentes[c] === "Crítico" ? "Sí" : "No", estado: "Recibida", prioridad: d.componentes[c] === "Crítico" ? 1 : 0, foto: iFotos[0] || "" });
+        await guardar("solicitudes", id, { numero: id, fecha: d.fecha, nombre: d.inspector, rol: "Comité de mantenimiento (inspección)", sede: d.sede, bloque: d.bloque, infra: "Física", espacio: `Bloque ${d.bloque} · ${d.espacio}`, componente: c, descripcion: `Hallazgo de inspección (${d.tipoEspacio}): ${c} en estado ${d.componentes[c]}. ${d.observaciones}`.trim(), riesgo: d.componentes[c] === "Crítico" ? "Sí" : "No", estado: "Recibida", prioridad: d.componentes[c] === "Crítico" ? 1 : 0, foto: fotoDe(c), origen: "Inspección física" });
       }
       f.reset(); iFotos = []; $("#i-prev").innerHTML = ""; tablaFisica(); $("#i-fecha").value = hoy();
       aviso(f, (malos.length ? `Inspección guardada. Se crearon ${malos.length} solicitud(es) por los componentes en mal estado.` : "Inspección guardada. Sin hallazgos en mal estado.") + (d.apto.startsWith("No") ? " El espacio quedó reportado como no apto: avise a rectoría para cerrarlo." : ""), true);
@@ -966,26 +992,29 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     if (falta) { aviso(f, "Falta: " + etiqueta(falta).replace(" *", ""), false); falta.focus(); return; }
     const sinCalif = INSP_TEC.find((c, i) => !$(`input[name=t${i}]:checked`, f));
     if (sinCalif) { aviso(f, "Falta calificar: " + sinCalif, false); return; }
+    const sinFotoT = faltaFotoHallazgo("t", INSP_TEC, "t", f);
+    if (sinFotoT) { aviso(f, "Falta la fotografía del hallazgo: " + sinFotoT, false); return; }
     if (!db) return;
     const num = (sel) => { const v = $(sel).value; return v === "" ? null : Number(v); };
-    const d = { tipo: "Tecnológica", fecha: $("#it-fecha").value, inspector: $("#it-inspector").value.trim(), sede: $("#it-sede").value.trim(), espacio: $("#it-ubic").value.trim(), codigo: $("#it-codigo").value.trim(), tipoEquipo: $("#it-tipo").value, tipoMantenimiento: $("input[name=it-tipom]:checked", f).value,
+    const d = { tipo: "Tecnológica", fecha: $("#it-fecha").value, inspector: $("#it-inspector").value.trim(), sede: $("#it-sede").value.trim(), bloque: $("#it-bloque").value, espacio: $("#it-ubic").value.trim(), codigo: $("#it-codigo").value.trim(), tipoEquipo: $("#it-tipo").value, tipoMantenimiento: $("input[name=it-tipom]:checked", f).value,
       componentes: {}, mediciones: { almacenamientoLibre: num("#it-disco"), mbps: num("#it-mbps"), horasLampara: num("#it-lampara"), antiguedad: num("#it-edad") },
-      actividades: ACTS_TEC.filter((a, i) => $("#it-a" + i).checked), estadoGeneral: $("#it-estado").value, proximaRevision: $("#it-prox").value, observaciones: $("#it-obs").value.trim() };
+      estadoGeneral: $("#it-estado").value, proximaRevision: $("#it-prox").value, observaciones: $("#it-obs").value.trim() };
     INSP_TEC.forEach((c, i) => (d.componentes[c] = $(`input[name=t${i}]:checked`, f).value));
     const malos = INSP_TEC.filter((c) => ["Malo", "Crítico"].includes(d.componentes[c]));
-    d.hallazgos = malos.length;
+    const fotoDe = (c) => HF.t[INSP_TEC.indexOf(c)] || "";
+    d.hallazgos = malos.length; d.hallazgosComponentes = malos; d.fotosHallazgos = malos.map(fotoDe);
     const btn = $("[data-save]", f); btn.disabled = true;
     try {
       await guardar("inspecciones", nuevoId("INS"), d);
       for (const c of malos) {
         const id = nuevoId("SOL");
-        await guardar("solicitudes", id, { numero: id, fecha: d.fecha, nombre: d.inspector, rol: "Líder TIC (inspección tecnológica)", sede: d.sede, infra: "Tecnológica", espacio: d.espacio, codigo: d.codigo, componente: c, descripcion: `Hallazgo de inspección en el equipo ${d.codigo} (${d.tipoEquipo}): ${c} en estado ${d.componentes[c]}. ${d.observaciones}`.trim(), riesgo: d.componentes[c] === "Crítico" ? "Sí" : "No", estado: "Recibida", prioridad: d.componentes[c] === "Crítico" ? 1 : 0, foto: "" });
+        await guardar("solicitudes", id, { numero: id, fecha: d.fecha, nombre: d.inspector, rol: "Líder TIC (inspección tecnológica)", sede: d.sede, bloque: d.bloque, infra: "Tecnológica", espacio: `Bloque ${d.bloque} · ${d.espacio}`, codigo: d.codigo, componente: c, descripcion: `Hallazgo de inspección en el equipo ${d.codigo} (${d.tipoEquipo}): ${c} en estado ${d.componentes[c]}. ${d.observaciones}`.trim(), riesgo: d.componentes[c] === "Crítico" ? "Sí" : "No", estado: "Recibida", prioridad: d.componentes[c] === "Crítico" ? 1 : 0, foto: fotoDe(c), origen: "Inspección tecnológica" });
       }
       const eq = EQ.find((e) => e.codigo === d.codigo);
       let extra = "";
       if (eq) { await db.collection("equipos").doc(eq.id).update({ estado: d.estadoGeneral, ultimoMantenimiento: d.fecha }); extra = " Hoja de vida del equipo actualizada."; }
-      else extra = " El equipo no tiene hoja de vida: regístrelo en el formato 3.";
-      f.reset(); $("#it-fecha").value = hoy();
+      else extra = " El equipo no tiene hoja de vida: regístrelo en «Hoja de vida de equipo».";
+      f.reset(); $("#it-fecha").value = hoy(); $$("#it-tabla td.hfoto").forEach((td) => celdaFoto(td, false));
       aviso(f, (malos.length ? `Inspección guardada. Se crearon ${malos.length} solicitud(es) por componentes en mal estado.` : "Inspección guardada. Sin componentes en mal estado.") + extra, true);
     } catch (e) { manejarError(f, e); } finally { btn.disabled = !db; }
   });
@@ -1201,7 +1230,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     const fe = $("#fl-estado").value, fi = $("#fl-infra").value, fp = $("#fl-prio").value, ft = $("#fl-texto").value.toLowerCase();
     const rows = SOL.filter((s) => (!fe || s.estado === fe) && (!fi || s.infra === fi) && (fp === "" || String(s.prioridad || 0) === fp) && (!ft || `${s.espacio} ${s.descripcion} ${s.componente}`.toLowerCase().includes(ft)));
     const tb = $("#t-sol tbody");
-    if (!rows.length) { tb.innerHTML = `<tr><td colspan="9" class="empty">${SOL.length ? "Ninguna solicitud coincide con el filtro." : "Aún no hay solicitudes. Las que se envíen desde el formato 1 aparecerán aquí."}</td></tr>`; return; }
+    if (!rows.length) { tb.innerHTML = `<tr><td colspan="9" class="empty">${SOL.length ? "Ninguna solicitud coincide con el filtro." : "Aún no hay solicitudes. Las que se envíen desde «Solicitud de mantenimiento» aparecerán aquí."}</td></tr>`; return; }
     tb.innerHTML = rows.map((s) => {
       const dias = diasHabiles(s.fecha, s.estado === "Cerrada" ? s.cierre : null);
       const vencida = s.estado !== "Cerrada" && PLAZO[s.prioridad] && dias > PLAZO[s.prioridad];
@@ -1215,7 +1244,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
         <td>${pill(s.prioridad)}</td>
         <td>${pillEstado(s.estado)}${s.verificacion ? `<br><span class="hint">Verificó: ${esc(s.verificacion.verificador)} · ${fmtFecha(s.verificacion.fecha)}</span>` : ""}</td>
         <td class="num ${vencida ? "vence" : ""}">${dias}${PLAZO[s.prioridad] ? ` / ${PLAZO[s.prioridad]}` : ""}${vencida ? "<br>Vencida" : ""}</td>
-        <td style="white-space:nowrap">${puedeVerificar() && s.estado === "Recibida" ? `<button class="btn" type="button" data-verif="${esc(s.id)}">Verificar y reportar</button><br>` : ""}<a class="btn sec" href="#informes" data-inf="${esc(s.id)}" style="margin-top:4px;display:inline-block">Ver informe</a></td></tr>`;
+        <td style="white-space:nowrap">${accionVerif(s)}<a class="btn sec" href="#informes" data-inf="${esc(s.id)}" style="margin-top:4px;display:inline-block">Ver informe</a></td></tr>`;
     }).join("");
   }
   $$("#fl-estado, #fl-infra, #fl-prio").forEach((s) => s.addEventListener("change", renderSol));
@@ -1232,7 +1261,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
     $(sel + " tbody").innerHTML = rows.length ? rows.map((r) => "<tr>" + cols.map((c) => `<td>${c(r)}</td>`).join("") + "</tr>").join("") : `<tr><td colspan="${cols.length}" class="empty">${vacio}</td></tr>`;
   }
   function renderOtros() {
-    renderSimple("#t-insp", INS, [(r) => fmtFecha(r.fecha), (r) => esc(r.tipo || "Física"), (r) => esc(r.sede), (r) => r.tipo === "Tecnológica" ? `<b>${esc(r.codigo)}</b> · ${esc(r.tipoEquipo)}<br>${esc(r.espacio)}` : `<b>${esc(r.espacio)}</b>${r.tipoEspacio ? "<br>" + esc(r.tipoEspacio) : ""}${r.apto && r.apto !== "Sí" ? ` <span class="pill p1">${esc(r.apto.split(":")[0])}</span>` : ""}`, (r) => esc(r.inspector), (r) => r.hallazgos ? `<span class="pill p2">${r.hallazgos}</span>` : "0"], "Aún no hay inspecciones registradas.");
+    renderSimple("#t-insp", INS, [(r) => fmtFecha(r.fecha), (r) => esc(r.tipo || "Física"), (r) => esc(r.sede), (r) => r.tipo === "Tecnológica" ? `<b>${esc(r.codigo)}</b> · ${esc(r.tipoEquipo)}<br>${r.bloque ? "Bloque " + esc(r.bloque) + " · " : ""}${esc(r.espacio)}` : `${r.bloque ? "Bloque " + esc(r.bloque) + " · " : ""}<b>${esc(r.espacio)}</b>${r.tipoEspacio ? "<br>" + esc(r.tipoEspacio) : ""}${r.apto && r.apto !== "Sí" ? ` <span class="pill p1">${esc(r.apto.split(":")[0])}</span>` : ""}`, (r) => esc(r.inspector), (r) => r.hallazgos ? `<span class="pill p2">${r.hallazgos}</span>` : "0"], "Aún no hay inspecciones registradas.");
     $("#it-codigos").innerHTML = EQ.map((e) => `<option value="${esc(e.codigo)}">${esc(e.tipo)} · ${esc(e.ubicacion)}</option>`).join("");
     renderSimple("#t-bajas", BAJ, [(r) => fmtFecha(r.fecha), (r) => `<b>${esc(r.codigo)}</b>`, (r) => esc(r.descripcion), (r) => esc(r.causa), (r) => esc(r.destino), (r) => esc(r.borrado), (r) => `<button class="btn sec" type="button" data-acta="${esc(r.id)}">Acta PDF</button>`], "Aún no hay propuestas de baja.");
     if (FICHA_ID) verFicha(FICHA_ID);
@@ -1598,6 +1627,16 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
   const CLASE_ESTADO = { "Recibida": "p4", "Verificada por el comité": "p3", "Aprobada por rectoría": "area", "En ejecución": "p2", "Escalada a Secretaría": "p2", "No aprobada": "p1", "Cerrada": "p3" };
   function pillEstado(e) { return `<span class="pill ${CLASE_ESTADO[e] || "p4"}">${esc(e || "Recibida")}</span>`; }
   const puedeVerificar = () => !ROL || ROL === "PM_PCO";
+  const FINALES = ["Cerrada", "No aprobada", "Escalada a Secretaría", "En ejecución", "Aprobada por rectoría"];
+  const porVerificar = (s) => !s.verificacion && !FINALES.includes(s.estado);
+  function accionVerif(s) {
+    if (puedeVerificar()) {
+      if (porVerificar(s)) return `<button class="btn" type="button" data-verif="${esc(s.id)}">Verificar y asignar prioridad</button><br>`;
+      if (s.estado === "Verificada por el comité") return `<button class="btn sec" type="button" data-verif="${esc(s.id)}">Editar verificación</button><br>`;
+      return "";
+    }
+    return porVerificar(s) ? '<span class="hint">Pendiente de verificación del comité (PM_PCO)</span><br>' : "";
+  }
   const NOMBRE_PRIO = ["Sin asignar", "1 – Crítica", "2 – Alta", "3 – Media", "4 – Baja"];
   function bannerInfo(t, ok) { const e = $("#estadoDb"); e.className = "banner " + (ok ? "ok" : "warn"); e.style.display = ""; e.textContent = t; clearTimeout(bannerInfo.t); bannerInfo.t = setTimeout(() => (e.style.display = "none"), 12000); }
   window.addEventListener("portal-correo", (e) => bannerInfo(e.detail, !/No se pudo|No hay/.test(e.detail)));
@@ -1609,7 +1648,8 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
   // verificación (comité)
   function modalVerificar(s) {
     const m = document.createElement("div"); m.className = "modal";
-    m.innerHTML = `<form class="caja" novalidate style="max-width:640px;max-height:92vh;overflow:auto"><h3>Verificar solicitud y reportar al Rector</h3>${resumenSol(s)}
+    const ed = s.verificacion || null;
+    m.innerHTML = `<form class="caja" novalidate style="max-width:640px;max-height:92vh;overflow:auto"><h3>${ed ? "Editar verificación" : "Verificar solicitud y asignar prioridad"}</h3>${resumenSol(Object.assign({}, s, { verificacion: null }))}
       <label>Fecha de verificación<input type="date" id="vf-fecha" value="${hoy()}" max="${hoy()}"></label>
       <label>Prioridad<select id="vf-prio"><option value="">Seleccione…</option><option value="1">1 – Crítica: riesgo o suspensión del servicio</option><option value="2">2 – Alta: afecta un espacio de uso diario</option><option value="3">3 – Media: deterioro que avanzará</option><option value="4">4 – Baja: mejora o estética</option></select></label>
       <label>Diagnóstico de la verificación en sitio<textarea id="vf-diag" placeholder="Qué se encontró, causa probable y alcance del daño"></textarea></label>
@@ -1617,8 +1657,9 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
       <label>Costo estimado (pesos)<input type="number" id="vf-costo" min="0" step="1000"></label>
       <label>Observaciones<textarea id="vf-obs"></textarea></label>
       <span class="msg" id="vf-msg" role="status"></span>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">Guardar verificación y notificar al Rector</button><button class="btn sec" type="button" id="vf-x">Cancelar</button></div></form>`;
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">${ed ? "Guardar cambios" : "Guardar verificación y notificar al Rector"}</button><button class="btn sec" type="button" id="vf-x">Cancelar</button></div></form>`;
     document.body.appendChild(m);
+    if (ed) { const q = (x) => m.querySelector(x); q("#vf-fecha").value = ed.fecha || hoy(); q("#vf-prio").value = String(s.prioridad || ""); q("#vf-diag").value = ed.diagnostico || ""; q("#vf-rec").value = ed.recomendacion || ""; q("#vf-costo").value = ed.costoEstimado ?? ""; q("#vf-obs").value = ed.observaciones || ""; }
     const cerrar = () => m.remove();
     m.querySelector("#vf-x").addEventListener("click", cerrar);
     m.querySelector("form").addEventListener("submit", async (ev) => {
@@ -1628,7 +1669,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 10px 20px 30px; color: var(
       const btn = m.querySelector("button[type=submit]"); btn.disabled = true; msg.className = "msg"; msg.textContent = "Guardando y notificando…";
       try {
         await db.collection("solicitudes").doc(s.id).update({ estado: "Verificada por el comité", prioridad: Number(g("#vf-prio")), verificacion: { fecha: g("#vf-fecha") || hoy(), verificador: SES ? SES.nombre : "Comité", diagnostico: g("#vf-diag"), recomendacion: g("#vf-rec"), costoEstimado: g("#vf-costo") === "" ? null : Number(g("#vf-costo")), observaciones: g("#vf-obs") } });
-        cerrar(); if (!SES || !SES.puedeNotificar) bannerInfo(`Solicitud ${s.numero} verificada y reportada al Rector en el portal.`, true);
+        cerrar(); if (ed) bannerInfo(`Verificación de ${s.numero} actualizada.`, true); else if (!SES || !SES.puedeNotificar) bannerInfo(`Solicitud ${s.numero} verificada y reportada al Rector en el portal.`, true);
       } catch (e) { btn.disabled = false; msg.className = "msg err"; msg.textContent = e && e.code === "invalid_argument" ? "Su rol no tiene permiso para verificar." : "No se pudo guardar. Intente de nuevo."; }
     });
   }
